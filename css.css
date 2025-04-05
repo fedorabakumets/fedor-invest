@@ -1,0 +1,702 @@
+/* Стили для всего тела страницы */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0, #d0d0d0, #b0c4de, #add8e6);
+    color: #333;
+    padding: 10px;
+    font-size: 16px;
+    line-height: 1.5;
+    animation: backgroundShift 15s infinite alternate;
+    margin: 0;
+}
+
+/* Анимация изменения фона */
+@keyframes backgroundShift {
+    0% { background: linear-gradient(135deg, #f5f5f5, #e0e0e0, #d0d0d0, #b0c4de, #add8e6); }
+    50% { background: linear-gradient(135deg, #add8e6, #b0c4de, #d0d0d0, #e0e0e0, #f5f5f5); }
+    100% { background: linear-gradient(135deg, #f5f5f5, #e6e6fa, #d8bfd8, #e0e0e0, #add8e6); }
+}
+
+/* Стили для основного контейнера */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* Стили для заголовков h1 и h3 */
+h1, h3 {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+/* Стили для заголовка h1 */
+h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #0066cc, #3333ff, #00ff99);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 102, 204, 0.5);
+    animation: glow 2s infinite alternate;
+}
+
+/* Анимация свечения текста */
+@keyframes glow {
+    0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 102, 204, 0.5); }
+    100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 255, 204, 0.7); }
+}
+
+/* Стили для параграфов в секции intro */
+.intro p {
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: center;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(90deg, #cce5ff, #ccffff);
+    padding: 8px;
+    border-radius: 6px;
+    animation: textPulse 3s infinite;
+}
+
+/* Анимация пульсации текста */
+@keyframes textPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+    100% { transform: scale(1); }
+}
+
+/* Стили для секции фильтров */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 2px;
+    background: linear-gradient(135deg, #ffffff, #f0f4f8, #e6e6fa, #d8bfd8);
+    padding: 4px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 0 30px rgba(0, 102, 204, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Псевдоэлемент для декоративного эффекта в фильтрах */
+.filters::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(173, 216, 230, 0.3), transparent);
+    animation: rotateGlow 10s infinite linear;
+}
+
+/* Анимация вращения градиента */
+@keyframes rotateGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Стили для секции фильтров */
+.filter-section {
+    width: 48%;
+    position: relative;
+}
+
+/* Стили для переключателя фильтров */
+.filter-toggle {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    color: #0066cc;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    transition: background 0.3s ease;
+}
+
+/* Эффект при наведении на переключатель фильтров */
+.filter-toggle:hover {
+    background: rgba(0, 102, 204, 0.1);
+}
+
+/* Стили для счетчика галочек */
+.filter-count {
+    display: inline-block;
+    min-width: 1.5em;
+    text-align: center;
+    background: rgba(0, 102, 204, 0.2);
+    color: #0066cc;
+    border-radius: 10px;
+    padding: 0 4px;
+    margin-left: 4px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+/* Эффект при наличии выбранных фильтров */
+.filter-toggle .filter-count:not(:empty) {
+    background: rgba(0, 255, 204, 0.3);
+    color: #00ff99;
+}
+
+/* Иконка перед переключателем фильтров */
+.filter-toggle::before {
+    font-family: "Font Awesome 5 Free";
+    margin-right: 5px;
+    font-weight: 900;
+    color: #00ff99;
+    animation: bounce 1.5s infinite;
+}
+
+/* Анимация подпрыгивания иконки */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* Иконка для фильтра по платежным системам */
+#paymentFilters .filter-toggle::before {
+    content: "\f555";
+}
+
+/* Иконка для фильтра по типам работы */
+#workFilters .filter-toggle::before {
+    content: "\f0ad";
+}
+
+/* Линия под переключателем фильтров */
+.filter-toggle::after {
+    content: "";
+    position: absolute;
+    width: 70%;
+    height: 2px;
+    background: linear-gradient(90deg, #0066cc, #00ff99);
+    bottom: -4px;
+    left: 0;
+    animation: widthPulse 2s infinite;
+}
+
+/* Анимация пульсации ширины линии */
+@keyframes widthPulse {
+    0% { width: 70%; }
+    50% { width: 100%; }
+    100% { width: 70%; }
+}
+
+/* Стили для иконки переключения */
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+/* Поворот иконки при свёрнутом состоянии */
+.filter-section.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+/* Стили для содержимого фильтров */
+.filter-content {
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 1;
+}
+
+/* Скрытие содержимого при свёрнутом состоянии */
+.filter-section.collapsed .filter-content {
+    max-height: 0;
+    opacity: 0;
+}
+
+/* Контейнер для элементов фильтров */
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Стили для меток фильтров */
+.filter-section label {
+    font-size: 0.9rem;
+    color: #444;
+    transition: all 0.3s ease;
+    flex: 1 1 calc(33% - 5px);
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для чекбоксов */
+.filter-section input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #0066cc;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Стили для отмеченного чекбокса */
+.filter-section input[type="checkbox"]:checked {
+    background: linear-gradient(90deg, #0066cc, #00ff99);
+    transform: rotate(360deg);
+}
+
+/* Галочка в отмеченном чекбоксе */
+.filter-section input[type="checkbox"]:checked::after {
+    content: "\f00c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 10px;
+}
+
+/* Эффект при наведении на чекбокс */
+.filter-section input[type="checkbox"]:hover {
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.5);
+}
+
+/* Эффект при наведении на метку */
+.filter-section label:hover {
+    color: #0066cc;
+    transform: translateX(3px);
+}
+
+/* Стили для управления фильтрами */
+.filters-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 0;
+}
+
+/* Стили для кнопки сброса фильтров */
+button#resetFilters {
+    padding: 8px 15px;
+    background: linear-gradient(90deg, #4169e1, #4682b4, #ffcc00);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 102, 204, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Иконка перед текстом кнопки сброса */
+button#resetFilters::before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f00d";
+    margin-right: 5px;
+    font-weight: 900;
+}
+
+/* Эффект переливания при наведении на кнопку */
+button#resetFilters::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.5s ease;
+}
+
+/* Движение эффекта при наведении */
+button#resetFilters:hover::after {
+    left: 100%;
+}
+
+/* Эффект при наведении на кнопку */
+button#resetFilters:hover {
+    animation: shake 0.5s infinite;
+    box-shadow: 0 0 15px rgba(0, 102, 204, 0.8);
+}
+
+/* Анимация дрожания кнопки */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-3px); }
+    100% { transform: translateX(0); }
+}
+
+/* Стили для выпадающего списка тем */
+select#themeSwitch {
+    padding: 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 215, 0.8);
+    border: 2px solid #0066cc;
+}
+
+/* Стили для сообщения об ошибке */
+.error-message {
+    background: linear-gradient(90deg, #4169e1, #4682b4);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(0, 102, 204, 0.5);
+    animation: slideIn 0.5s ease;
+    display: none;
+}
+
+/* Показ сообщения об ошибке */
+.error-message.show {
+    display: flex;
+}
+
+/* Скрытие сообщения об ошибке */
+.error-message.hide {
+    animation: slideOut 0.5s ease forwards;
+}
+
+/* Анимация появления сообщения */
+@keyframes slideIn {
+    0% { transform: translateX(-100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+/* Анимация исчезновения сообщения */
+@keyframes slideOut {
+    0% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(-100%); opacity: 0; }
+}
+
+/* Иконка перед текстом ошибки */
+.error-message::before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f071";
+    font-weight: 900;
+    font-size: 16px;
+    animation: spin 2s infinite linear;
+}
+
+/* Анимация вращения иконки */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Стили для секции таблицы */
+.table-section {
+    margin-top: 2px;
+}
+
+/* Стили для таблицы */
+table {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background: linear-gradient(135deg, #f9f9f9, #e6e6fa);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25), 0 0 60px rgba(0, 255, 204, 0.4);
+    margin: 15px 0;
+    border: 3px solid #0066cc;
+    animation: tableGlow 3s infinite alternate;
+}
+
+/* Анимация свечения таблицы */
+@keyframes tableGlow {
+    0% { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25), 0 0 60px rgba(0, 255, 204, 0.4); }
+    100% { box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), 0 0 80px rgba(0, 102, 204, 0.6); }
+}
+
+/* Стили для ячеек таблицы */
+th, td {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    text-align: left;
+}
+
+/* Стили для заголовков таблицы */
+th {
+    background: linear-gradient(90deg, #3333ff, #00ff99);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid #0066cc;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Эффект при наведении на заголовки таблицы */
+th:hover {
+    background: linear-gradient(90deg, #0066cc, #00ff99);
+    box-shadow: 0 0 15px rgba(0, 102, 204, 0.7);
+    transform: scale(1.05);
+}
+
+/* Стили для ячеек данных */
+td {
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    color: #2c2c2c;
+}
+
+/* Плавное изменение строк таблицы */
+table tbody tr {
+    transition: all 0.3s ease;
+}
+
+/* Скрытие строк */
+table tbody tr.hidden {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Чередование фона строк */
+table tbody tr:nth-child(odd) {
+    background: rgba(240, 248, 255, 0.8);
+}
+
+/* Эффект при наведении на строки */
+table tbody tr:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+}
+
+/* Эффект при наведении на ячейки в строке */
+table tbody tr:hover td {
+    background: rgba(255, 245, 238, 0.9);
+}
+
+/* Стили для ссылок в ячейках */
+td a {
+    color: #0066cc;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Иконка после ссылки */
+td a::after {
+    content: "\f35d";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-left: 8px;
+    font-size: 14px;
+    color: #00ff99;
+}
+
+/* Эффект при наведении на ссылку */
+td a:hover {
+    color: #00ff99;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.7);
+}
+
+/* Анимация иконки при наведении на ссылку */
+td a:hover::after {
+    animation: bounce 1s infinite;
+}
+
+/* Стили для иконки сортировки */
+.sort-icon {
+    font-size: 14px;
+    margin-left: 8px;
+    color: #ffcc00;
+}
+
+/* Активная иконка сортировки */
+.sort-icon.active {
+    color: #00ff99;
+    animation: spin 1s infinite linear;
+}
+
+/* Стили для пагинации */
+#pagination {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Стили для кнопок пагинации */
+#pagination button {
+    padding: 6px 12px;
+    background: linear-gradient(90deg, #0066cc, #00ff99);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Эффект при наведении на кнопки пагинации */
+#pagination button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(0, 102, 204, 0.7);
+}
+
+/* Стили для неактивных кнопок пагинации */
+#pagination button:disabled {
+    background: linear-gradient(90deg, #ccc, #aaa);
+    cursor: not-allowed;
+}
+
+/* Стили для выпадающего списка в пагинации */
+#pagination select {
+    padding: 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid #0066cc;
+}
+
+/* Стили для тёмной темы */
+[data-theme="dark"] {
+    background: linear-gradient(135deg, #1a1a1a, #2c2c2c, #3d3d3d, #4a4a4a);
+    color: #eee;
+}
+
+/* Фильтры в тёмной теме */
+[data-theme="dark"] .filters {
+    background: linear-gradient(135deg, #2c2c2c, #3d3d3d, #4a4a4a);
+    box-shadow: 0 4px 10px rgba(0, 102, 204, 0.3);
+}
+
+/* Счетчик в темной теме */
+[data-theme="dark"] .filter-count {
+    background: rgba(0, 102, 204, 0.3);
+    color: #00ff99;
+}
+
+/* Счетчик с выбранными фильтрами в темной теме */
+[data-theme="dark"] .filter-toggle .filter-count:not(:empty) {
+    background: rgba(0, 255, 204, 0.4);
+}
+
+/* Заголовки таблицы в тёмной теме */
+[data-theme="dark"] th {
+    background: linear-gradient(90deg, #0066cc, #00ff99);
+    border-bottom: 3px solid #ffcc00;
+}
+
+/* Эффект при наведении на заголовки в тёмной теме */
+[data-theme="dark"] th:hover {
+    background: linear-gradient(90deg, #00ff99, #0066cc);
+}
+
+/* Ячейки данных в тёмной теме */
+[data-theme="dark"] td {
+    background: rgba(60, 60, 60, 0.9);
+    color: #eee;
+}
+
+/* Чередование фона строк в тёмной теме */
+[data-theme="dark"] table tbody tr:nth-child(odd) {
+    background: rgba(50, 50, 50, 0.8);
+}
+
+/* Эффект при наведении на ячейки в тёмной теме */
+[data-theme="dark"] table tbody tr:hover td {
+    background: rgba(80, 80, 80, 0.9);
+}
+
+/* Сообщение об ошибке в тёмной теме */
+[data-theme="dark"] .error-message {
+    background: linear-gradient(90deg, #4682b4, #4169e1);
+}
+
+/* Кнопка сброса фильтров в тёмной теме */
+[data-theme="dark"] button#resetFilters {
+    background: linear-gradient(90deg, #4682b4, #4169e1, #ffcc00);
+}
+
+/* Адаптация для экранов до 768px (планшеты) */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        gap: 3px;
+        padding: 3px;
+    }
+    .filter-section {
+        width: 100%;
+    }
+    .filter-toggle {
+        font-size: 1rem;
+        margin-bottom: 3px;
+    }
+    .filter-section label {
+        font-size: 0.85rem;
+        flex: 1 1 calc(50% - 3px);
+    }
+    .table-section {
+        margin-top: 1px;
+    }
+    table {
+        min-width: 1000px;
+    }
+}
+
+/* Адаптация для экранов до 480px (телефоны) */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+        padding: 5px;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+    .intro p {
+        font-size: 0.9rem;
+        padding: 6px;
+        margin-bottom: 8px;
+    }
+    .filters {
+        padding: 2px;
+    }
+    .filter-toggle {
+        font-size: 0.9rem;
+    }
+    .filter-section label {
+        font-size: 0.8rem;
+        flex: 1 1 calc(100% - 3px);
+    }
+    table {
+        font-size: 13px;
+    }
+    th, td {
+        padding: 8px 10px;
+    }
+}

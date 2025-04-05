@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Сравнение сайтов для заработка: минимальная сумма вывода, реферальные системы, платежные системы и типы работы. Удобные фильтры и актуальные данные 2025 года.">
+    <meta name="keywords" content="сравнение сайтов, сайты для заработка, реферальная система, платежные системы, минимальная сумма вывода">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Ваш_Имя">
+    <title>Заработок на кликах</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&family=Arial&display=swap" rel="stylesheet" media="print, screen">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://drive.google.com/uc?export=download&id=1Sw7lcHPCcMMqvnj1ft43UNinqt5MfD_n">
+</head>
+<body>
+    <div class="container">
+        <div class="intro">
+            <h1>Заработок на кликах</h1>
+            <p>Ищете лучшие сайты для заработка онлайн? На этой странице вы найдете актуальное сравнение сайтов по минимальной сумме вывода, реферальным системам, сложности регистрации и доступным платежным системам и многим другим данным. Используйте фильтры, чтобы выбрать подходящий вариант, и сортируйте данные по своим предпочтениям. Обновлено в апреле 2025 года.</p>
+            <p id="lastUpdated">Последнее обновление: <span id="updateTimestamp">...</span></p>
+            <button id="fontSizeIncrease" aria-label="Увеличить шрифт">+</button>
+            <button id="fontSizeDecrease" aria-label="Уменьшить шрифт">-</button>
+        </div>
+
+        <section class="filters">
+            <div class="filter-section" id="paymentFilters" aria-label="Фильтр по платежным системам">
+                <h3 class="filter-toggle" aria-controls="paymentContainer" aria-expanded="true">
+                    Фильтр по платежным системам (<span class="filter-count">0</span>)
+                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="filter-content">
+                    <div class="filter-container" id="paymentContainer"></div>
+                </div>
+            </div>
+            <div class="filter-section" id="workFilters" aria-label="Фильтр по типам работы">
+                <h3 class="filter-toggle" aria-controls="workContainer" aria-expanded="true">
+                    Фильтр по типам работы (<span class="filter-count">0</span>)
+                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="filter-content">
+                    <div class="filter-container" id="workContainer"></div>
+                </div>
+            </div>
+        </section>
+        <div class="filters-controls">
+            <button id="resetFilters" class="reset-btn" aria-label="Сбросить фильтры">Сбросить фильтры</button>
+            <select id="themeSwitch" aria-label="Выбор темы">
+                <option value="light">Светлая</option>
+                <option value="dark">Темная</option>
+            </select>
+        </div>
+
+        <div id="errorContainer" class="error-message" role="alert">
+            <span class="error-text"></span>
+            <button class="error-close" aria-label="Закрыть сообщение">✕</button>
+        </div>
+
+        <section class="table-section">
+            <table id="sitesTable" aria-label="Таблица сравнения сайтов">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Название сайта <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th onclick="sortTable(1)">Дата создания <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th onclick="sortTable(2)">Минимальная сумма вывода <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th onclick="sortTable(3)">Реферальная система <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th onclick="sortTable(4)">Сложность регистрации <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th onclick="sortTable(5)">Платежные системы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th onclick="sortTable(6)">Тип работы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th onclick="sortTable(7)">Отзывы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </section>
+        <div id="pagination" aria-label="Навигация по страницам"></div>
+        <button id="themeToggleMobile" class="theme-toggle-mobile" aria-label="Переключить тему">🌙</button>
+    </div>
+    <script src="https://drive.google.com/uc?export=download&id=1l93OU6oemRrdgDR36h5UTlCtyXE6_gWl"></script>
+</body>
+</html>
