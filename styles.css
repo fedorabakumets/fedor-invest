@@ -9,7 +9,7 @@ body {
     animation: backgroundShift 30s infinite alternate; /* Анимация изменения фона */
     margin: 0; /* Убирает внешние отступы */
 }
-
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 /* Анимация для фона body */
 @keyframes backgroundShift {
     0% { background: linear-gradient(135deg, #f5f5f5, #e0e0e0, #d0d0d0, #b0c4de, #add8e6); } /* Начальное состояние градиента */

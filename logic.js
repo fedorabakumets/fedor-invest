@@ -1,5 +1,5 @@
 // logic.js
-// Сортировка таблицы
+// Сортировddddddddddddddка таблицы
 function sortTable(columnIndex) {
     if (window.appState.sort.column === columnIndex) window.appState.sort.direction *= -1;
     else window.appState.sort.direction = 1;

@@ -1,5 +1,5 @@
 // ui.js
-// Отрисовка таблицы
+// Отрисовdddddddddddddddddddddddddddddddddddddddddddddка таблицы
 function renderTable() {
     const tbody = document.getElementById('tableBody');
     const loadingIndicator = document.getElementById('loadingIndicator');

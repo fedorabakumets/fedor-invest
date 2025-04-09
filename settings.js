@@ -16,7 +16,7 @@ function applySettings() {
     const { settings } = appState;
     const root = document.documentElement;
 
-    // Тема
+    // Темddddddddddddddddddddddа
     document.body.setAttribute('data-theme', settings.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : settings.theme);
 
     // Шрифты

@@ -1,5 +1,5 @@
 // data.js
-// Константы
+// Констаdddddddddddddddddddнты
 const COLUMN_KEYS = [
     'Название сайта',
     'Дата создания',
