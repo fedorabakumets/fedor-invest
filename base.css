@@ -1,7 +1,15 @@
+:root {
+    --background-color: #f5f7fa;
+    --accent-color: #1e90ff;
+    --text-color: #2c3e50;
+    --background-opacity: 0.15;
+    --shadow-intensity: 20px;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa, #c3cfe2, #b0c4de, #a1c4fd, #c2e9fb);
-    color: #2c3e50;
+    background: linear-gradient(135deg, var(--background-color), #c3cfe2, #b0c4de, #a1c4fd, #c2e9fb);
+    color: var(--text-color);
     padding: 15px;
     font-size: 16px;
     line-height: 1.6;
@@ -17,23 +25,8 @@ body {
     position: relative;
     overflow: hidden;
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, var(--background-opacity));
     backdrop-filter: blur(12px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px var(--shadow-intensity) rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-h1, h3 {
-    font-family: 'Roboto Condensed', sans-serif;
-}
-
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
 }
