@@ -2,6 +2,7 @@
     background: none !important;
     color: #000 !important;
     font-family: inherit !important;
+    border: 2px solid blue !important; /* Индикатор уровня 0 */
 }
 
 .performance-0 * {
@@ -190,6 +191,7 @@
 
 .performance-1 {
     animation: backgroundShift 30s infinite alternate !important;
+    border: 2px solid green !important; /* Индикатор уровня 1 */
 }
 
 .performance-1 * {
@@ -199,6 +201,7 @@
 
 .performance-2 {
     animation: backgroundShift 20s infinite alternate, backgroundPulse 5s infinite !important;
+    border: 2px solid yellow !important; /* Индикатор уровня 2 */
 }
 
 .performance-2 .container {
@@ -235,6 +238,7 @@
 
 .performance-3 {
     animation: backgroundShift 15s infinite alternate, backgroundPulse 4s infinite !important;
+    border: 2px solid orange !important; /* Индикатор уровня 3 */
 }
 
 .performance-3 .container {
@@ -259,6 +263,7 @@
 
 .performance-4 {
     animation: backgroundShift 10s infinite alternate, backgroundPulse 2s infinite, backgroundSpin 15s infinite !important;
+    border: 2px solid red !important; /* Индикатор уровня 4 */
 }
 
 .performance-4 .container {

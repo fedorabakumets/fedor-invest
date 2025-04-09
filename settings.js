@@ -16,11 +16,19 @@ window.settingsModule = {
     initSettingsPanel,
     toggleSettingsPanel: function() {
         const panel = document.getElementById('settingsPanel');
-        panel.classList.toggle('hidden');
+        if (panel) {
+            const isHidden = panel.classList.contains('hidden');
+            panel.classList.toggle('hidden');
+            panel.style.display = isHidden ? 'block' : 'none';
+            console.log('Панель настроек:', isHidden ? 'показана' : 'скрыта');
+        } else {
+            console.error('Элемент #settingsPanel не найден в DOM');
+        }
     },
     saveSettings: function() {
         localStorage.setItem('settings', JSON.stringify(window.settingsModule.appState.settings));
         applySettings();
+        console.log('Настройки сохранены:', window.settingsModule.appState.settings);
     }
 };
 
@@ -28,15 +36,19 @@ function applySettings() {
     const { settings } = window.settingsModule.appState;
     const root = document.documentElement;
 
-    document.body.setAttribute('data-theme', settings.theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : settings.theme);
+    document.body.setAttribute('data-theme', settings.theme === 'auto' 
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') 
+        : settings.theme);
+    
     root.style.fontSize = `${settings.fontSize}px`;
     root.style.fontFamily = settings.fontFamily;
     root.style.setProperty('--background-color', settings.backgroundColor);
     root.style.setProperty('--accent-color', settings.accentColor);
     root.style.setProperty('--text-color', settings.textColor);
-    root.className = `performance-${settings.animationLevel}`;
     root.style.setProperty('--background-opacity', settings.backgroundOpacity);
     root.style.setProperty('--shadow-intensity', `${settings.shadowIntensity}px`);
+    
+    console.log('Применены настройки:', settings);
 }
 
 function initSettingsPanel() {
@@ -45,38 +57,34 @@ function initSettingsPanel() {
     const saveBtn = document.getElementById('saveSettings');
     const settingsBtn = document.getElementById('settingsBtn');
 
-    if (settingsBtn) settingsBtn.addEventListener('click', window.settingsModule.toggleSettingsPanel);
-    if (closeBtn) closeBtn.addEventListener('click', window.settingsModule.toggleSettingsPanel);
-    if (saveBtn) saveBtn.addEventListener('click', window.settingsModule.saveSettings);
+    console.log('Инициализация настроек. Элементы:', { panel, closeBtn, saveBtn, settingsBtn });
 
-    // Привязка событий к элементам настроек (если есть элементы управления)
-    const inputs = {
-        themeSelect: 'theme',
-        fontSize: 'fontSize',
-        fontFamily: 'fontFamily',
-        backgroundColor: 'backgroundColor',
-        accentColor: 'accentColor',
-        textColor: 'textColor',
-        animationLevel: 'animationLevel',
-        backgroundOpacity: 'backgroundOpacity',
-        shadowIntensity: 'shadowIntensity'
-    };
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', window.settingsModule.toggleSettingsPanel);
+    } else {
+        console.error('Кнопка #settingsBtn не найдена в DOM');
+    }
 
-    Object.entries(inputs).forEach(([id, key]) => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.value = window.settingsModule.appState.settings[key];
-            input.addEventListener('input', () => {
-                window.settingsModule.appState.settings[key] = input.type === 'number' ? parseFloat(input.value) : input.value;
-                applySettings();
-                if (input.type === 'range' && input.nextElementSibling) {
-                    input.nextElementSibling.textContent = input.value;
-                }
-            });
-        }
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', window.settingsModule.toggleSettingsPanel);
+    } else {
+        console.error('Кнопка #closeSettings не найдена в DOM');
+    }
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', window.settingsModule.saveSettings);
+    } else {
+        console.error('Кнопка #saveSettings не найдена в DOM');
+    }
+
+    if (!panel) {
+        console.error('Панель #settingsPanel не найдена в DOM');
+    }
 
     applySettings();
 }
 
-document.addEventListener('DOMContentLoaded', initSettingsPanel);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM полностью загружен, запускаем initSettingsPanel');
+    initSettingsPanel();
+});

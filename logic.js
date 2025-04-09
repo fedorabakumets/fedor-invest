@@ -1,5 +1,3 @@
-// logic.js
-// Сортировка таблицы
 function sortTable(columnIndex) {
     if (window.appState.sort.column === columnIndex) window.appState.sort.direction *= -1;
     else window.appState.sort.direction = 1;
@@ -35,7 +33,6 @@ function sortTable(columnIndex) {
     window.uiModule.renderTable();
 }
 
-// Обновление стрелок сортировки
 function updateArrow(columnIndex) {
     const arrows = document.querySelectorAll('thead th .sort-icon');
     arrows.forEach((arrow, idx) => {
@@ -46,7 +43,6 @@ function updateArrow(columnIndex) {
     });
 }
 
-// Применение фильтров
 function applyFilters() {
     const selectedPayments = Array.from(document.querySelectorAll('input[name="payment"]:checked')).map(cb => cb.value);
     const selectedWork = Array.from(document.querySelectorAll('input[name="work"]:checked')).map(cb => cb.value);
@@ -65,7 +61,6 @@ function applyFilters() {
     window.uiModule.updateFilterCounts();
 }
 
-// Навигация по страницам
 function changePage(delta) {
     const totalPages = Math.ceil(window.appState.tableData.length / window.appState.rowsPerPage);
     window.appState.page = Math.max(1, Math.min(window.appState.page + delta, totalPages));
@@ -77,20 +72,17 @@ function changePageTo(page) {
     window.uiModule.renderTable();
 }
 
-// Изменение количества строк на странице
 function changeRowsPerPage(value) {
     window.appState.rowsPerPage = parseInt(value, 10);
     window.appState.page = 1;
     window.uiModule.renderTable();
 }
 
-// Изменение количества колонок в карточном режиме
 function changeColsPerRow(value) {
     window.appState.colsPerRow = parseInt(value, 10);
     window.uiModule.renderTable();
 }
 
-// Добавление новой колонки в карточный режим
 function addColumn() {
     const colsToggle = document.querySelector('.cols-toggle');
     if (!colsToggle) return;
@@ -105,7 +97,6 @@ function addColumn() {
     changeColsPerRow(newCols);
 }
 
-// Переключение видимости последних изменений
 function toggleLastChanges() {
     window.appState.isChangesVisible = !window.appState.isChangesVisible;
     const content = document.getElementById('lastChangesContent');
@@ -119,7 +110,6 @@ function toggleLastChanges() {
     }
 }
 
-// Отображение ошибки
 function showError(message) {
     const errorContainer = document.getElementById('errorContainer');
     const errorText = errorContainer?.querySelector('.error-text');
@@ -130,7 +120,6 @@ function showError(message) {
     }
 }
 
-// Скрытие ошибки
 function hideError() {
     const errorContainer = document.getElementById('errorContainer');
     if (errorContainer) {
@@ -138,7 +127,6 @@ function hideError() {
     }
 }
 
-// Переключение темы
 function setTheme(theme) {
     window.appState.theme = theme;
     document.documentElement.setAttribute('data-theme', theme);
@@ -150,7 +138,6 @@ function setTheme(theme) {
     }
 }
 
-// Переключение вида (таблица/карточки)
 function setView() {
     window.appState.view = window.appState.view === 'table' ? 'cards' : 'table';
     const tableSection = document.querySelector('.table-section');
@@ -170,29 +157,30 @@ function setView() {
     }
 }
 
-// Изменение размера шрифта
 function adjustFontSize(delta) {
     window.appState.fontSize = Math.max(0.8, Math.min(1.5, window.appState.fontSize + delta));
     document.documentElement.style.fontSize = `${window.appState.fontSize}rem`;
     localStorage.setItem('fontSize', window.appState.fontSize);
 }
 
-// Применение уровня производительности
 function applyPerformanceLevel(level) {
-    window.appState.performanceLevel = parseInt(level);
-    const htmlRoot = document.getElementById('htmlRoot');
+    console.log('Применение уровня производительности:', level);
+    window.appState.performanceLevel = parseInt(level, 10);
+    const htmlRoot = document.documentElement;
     if (htmlRoot) {
         htmlRoot.className = '';
-        htmlRoot.classList.add(`performance-${level}`);
+        htmlRoot.classList.add(`performance-${window.appState.performanceLevel}`);
         document.querySelectorAll('.perf-btn').forEach(btn => {
-            btn.classList.toggle('active', parseInt(btn.dataset.level) === window.appState.performanceLevel);
+            btn.classList.toggle('active', parseInt(btn.dataset.level, 10) === window.appState.performanceLevel);
         });
-        localStorage.setItem('performanceLevel', level);
+        localStorage.setItem('performanceLevel', window.appState.performanceLevel);
         window.uiModule.renderTable();
+        console.log('Установлен класс:', htmlRoot.className);
+    } else {
+        console.error('document.documentElement не найден');
     }
 }
 
-// Загрузка данных
 async function fetchData() {
     const mockData = {
         success: true,
@@ -247,7 +235,6 @@ async function fetchData() {
     }
 }
 
-// Инициализация приложения
 async function init() {
     if (!window.appState) {
         window.appState = {
@@ -280,6 +267,8 @@ async function init() {
         Object.assign(window.appState.settings, window.settingsModule?.appState?.settings || {});
     }
 
+    console.log('Инициализация приложения. Значения из localStorage:', { savedTheme, savedView, savedFontSize, savedPerformanceLevel });
+
     setTheme(savedTheme);
     window.appState.view = savedView;
     document.querySelector('.table-section')?.classList.toggle('cards-view', savedView === 'cards');
@@ -302,6 +291,20 @@ async function init() {
         window.uiModule.renderTable();
     }
 
+    console.log('Привязка событий...');
+    const perfButtons = document.querySelectorAll('.perf-btn');
+    if (perfButtons.length === 0) {
+        console.error('Кнопки .perf-btn не найдены в DOM');
+    } else {
+        console.log('Найдено кнопок производительности:', perfButtons.length);
+        perfButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                console.log('Нажата кнопка производительности с уровнем:', btn.dataset.level);
+                applyPerformanceLevel(btn.dataset.level);
+            });
+        });
+    }
+
     document.getElementById('toggleLastChanges')?.addEventListener('click', toggleLastChanges);
     document.getElementById('fontSizeIncrease')?.addEventListener('click', () => adjustFontSize(0.1));
     document.getElementById('fontSizeDecrease')?.addEventListener('click', () => adjustFontSize(-0.1));
@@ -318,7 +321,6 @@ async function init() {
     document.querySelectorAll('.cols-btn').forEach(btn => btn.addEventListener('click', () => changeColsPerRow(btn.dataset.cols)));
     document.querySelector('.cols-add-btn')?.addEventListener('click', addColumn);
     document.querySelector('.error-close')?.addEventListener('click', hideError);
-    document.querySelectorAll('.perf-btn').forEach(btn => btn.addEventListener('click', () => applyPerformanceLevel(btn.dataset.level)));
     document.getElementById('settingsBtn')?.addEventListener('click', window.settingsModule.toggleSettingsPanel);
     document.getElementById('closeSettings')?.addEventListener('click', window.settingsModule.toggleSettingsPanel);
     document.getElementById('saveSettings')?.addEventListener('click', window.settingsModule.saveSettings);
@@ -340,10 +342,11 @@ async function init() {
     window.settingsModule.applySettings();
 }
 
-// Запуск приложения
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM загружен, запускаем init');
+    init();
+});
 
-// Экспорт
 window.logicModule = {
     sortTable,
     updateArrow,
