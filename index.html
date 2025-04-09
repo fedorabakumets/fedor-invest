@@ -4,84 +4,253 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Сравнение сайтов для заработка: минимальная сумма вывода, реферальные системы, платежные системы и типы работы. Удобные фильтры и актуальные данные 2025 года.">
-    <meta name="keywords" content="сравнение сайтов, сайты для заработка, реферальная система, платежные системы, минимальная сумма вывода, клики, онлайн заработок">
+    <meta name="keywords" content="сравнение сайтов, сайты для заработка, реферальная система, платежные системы, минимальная сумма вывода">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Ваш_Имя">
-    <meta name="theme-color" content="#0066cc">
-    <meta property="og:title" content="Заработок на кликах">
-    <meta property="og:description" content="Сравнение сайтов для заработка онлайн с фильтрами и актуальными данными 2025 года.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ваш-username.github.io/название-репозитория/">
-    <meta property="og:image" content="https://ваш-username.github.io/название-репозитория/og-image.jpg">
     <title>Заработок на кликах</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet" media="print, screen">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&display=swap" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Condensed:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet" media="print, screen">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" loading="lazy">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="filters.css">
+    <link rel="stylesheet" href="table.css">
+    <link rel="stylesheet" href="pagination.css">
+    <link rel="stylesheet" href="themes.css">
+    <link rel="stylesheet" href="animations.css">
 </head>
 <body>
     <div class="container">
+        <h1>Заработок на кликах</h1>
         <div class="intro">
-            <h1>Заработок на кликах</h1>
-            <p>Ищете лучшие сайты для заработка онлайн? На этой странице вы найдете актуальное сравнение сайтов по минимальной сумме вывода, реферальным системам, сложности регистрации и доступным платежным системам и многим другим данным. Используйте фильтры, чтобы выбрать подходящий вариант, и сортируйте данные по своим предпочтениям. Обновлено в апреле 2025 года.</p>
-            <p id="lastUpdated">Последнее обновление: <span id="updateTimestamp">...</span></p>
-            <button id="fontSizeIncrease" aria-label="Увеличить шрифт">+</button>
-            <button id="fontSizeDecrease" aria-label="Уменьшить шрифт">-</button>
+            <p>Сравнение сайтов для заработка с актуальными данными на 2025 год. Используйте фильтры и настройки для удобного просмотра.</p>
         </div>
 
-        <section class="filters">
-            <div class="filter-section" id="paymentFilters" aria-label="Фильтр по платежным системам">
-                <h3 class="filter-toggle" aria-controls="paymentContainer" aria-expanded="true">
-                    Фильтр по платежным системам (<span class="filter-count">0</span>)
-                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
-                </h3>
+        <!-- Блок последних изменений -->
+        <div class="last-changes-container">
+            <button id="toggleLastChanges">
+                <i class="fas fa-clock"></i> Последние изменения
+            </button>
+            <div id="lastChangesContent" class="last-changes-content hidden">
+                <ul id="changesList">
+                    <li>08.04.2025: Добавлен новый сайт "ClickEarn".</li>
+                    <li>05.04.2025: Обновлены минимальные суммы вывода для "PayClick".</li>
+                    <li>01.04.2025: Исправлены данные по реферальной системе "EarnFast".</li>
+                </ul>
+                <a href="#" class="all-changes-btn"><i class="fas fa-list"></i> Все изменения</a>
+            </div>
+        </div>
+
+        <!-- Элементы управления -->
+        <div class="controls">
+            <button id="fontSizeIncrease" aria-label="Увеличить размер шрифта"><i class="fas fa-plus"></i></button>
+            <button id="fontSizeDecrease" aria-label="Уменьшить размер шрифта"><i class="fas fa-minus"></i></button>
+            <button id="themeToggle" aria-label="Переключить тему"><i class="fas fa-moon"></i></button>
+            <button id="settingsBtn" class="settings-btn">Настройки</button>
+        </div>
+
+        <!-- Кнопки производительности -->
+        <div class="performance-buttons">
+            <span>Уровень производительности:</span>
+            <button class="perf-btn" data-level="0">0</button>
+            <button class="perf-btn" data-level="1">1</button>
+            <button class="perf-btn active" data-level="2">2</button>
+            <button class="perf-btn" data-level="3">3</button>
+            <button class="perf-btn" data-level="4">4</button>
+        </div>
+
+        <!-- Фильтры -->
+        <div class="filters">
+            <div class="filter-section">
+                <div class="filter-toggle">Тип работы <span class="filter-count">2</span></div>
                 <div class="filter-content">
-                    <div class="filter-container" id="paymentContainer"></div>
+                    <div class="filter-column">
+                        <label><input type="checkbox" checked> Клики</label>
+                        <label><input type="checkbox"> Задания</label>
+                    </div>
+                    <div class="filter-column">
+                        <label><input type="checkbox"> Опросы</label>
+                        <label><input type="checkbox" checked> Рефералы</label>
+                    </div>
                 </div>
             </div>
-            <div class="filter-section" id="workFilters" aria-label="Фильтр по типам работы">
-                <h3 class="filter-toggle" aria-controls="workContainer" aria-expanded="true">
-                    Фильтр по типам работы (<span class="filter-count">0</span>)
-                    <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
-                </h3>
+            <div class="filter-section">
+                <div class="filter-toggle">Платежные системы <span class="filter-count">1</span></div>
                 <div class="filter-content">
-                    <div class="filter-container" id="workContainer"></div>
+                    <div class="filter-column">
+                        <label><input type="checkbox" checked> PayPal</label>
+                        <label><input type="checkbox"> WebMoney</label>
+                    </div>
+                    <div class="filter-column">
+                        <label><input type="checkbox"> Qiwi</label>
+                        <label><input type="checkbox"> Банковская карта</label>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <!-- Элементы управления фильтрами -->
         <div class="filters-controls">
-            <button id="resetFilters" class="reset-btn" aria-label="Сбросить фильтры">Сбросить фильтры</button>
-            <select id="themeSwitch" aria-label="Выбор темы">
-                <option value="light">Светлая</option>
-                <option value="dark">Темная</option>
-            </select>
+            <button id="resetFilters"><i class="fas fa-undo"></i> Сбросить фильтры</button>
+            <div class="rows-toggle">
+                <button class="rows-btn" data-rows="10"><span>10</span></button>
+                <button class="rows-btn active" data-rows="25"><span>25</span></button>
+                <button class="rows-btn" data-rows="50"><span>50</span></button>
+            </div>
+            <div class="cols-toggle">
+                <button class="cols-btn active" data-view="table"><i class="fas fa-table"></i></button>
+                <button class="cols-btn" data-view="cards"><i class="fas fa-th-large"></i></button>
+                <button class="cols-add-btn"><i class="fas fa-plus"></i></button>
+            </div>
+            <button class="view-btn"><i class="fas fa-eye"></i> Применить</button>
         </div>
 
-        <div id="errorContainer" class="error-message" role="alert">
-            <span class="error-text"></span>
-            <button class="error-close" aria-label="Закрыть сообщение">✕</button>
+        <!-- Сообщение об ошибке -->
+        <div id="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-triangle"></i> Ошибка загрузки данных
         </div>
 
-        <section class="table-section">
-            <table id="sitesTable" aria-label="Таблица сравнения сайтов">
+        <!-- Таблица -->
+        <div class="table-section">
+            <div id="loadingIndicator" class="loading-indicator hidden">Загрузка...</div>
+            <table id="dataTable">
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Название сайта <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(1)">Дата создания <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(2)">Минимальная сумма вывода <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(3)">Реферальная система <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(4)">Сложность регистрации <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(5)">Платежные системы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(6)">Тип работы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(7)">Отзывы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th>Название</th>
+                        <th>Мин. вывод ($)</th>
+                        <th>Реф. система</th>
+                        <th>Платежные системы</th>
+                        <th>Тип работы</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody"></tbody>
+                <tbody>
+                    <tr>
+                        <td data-label="Название"><a href="#">ClickEarn</a></td>
+                        <td data-label="Мин. вывод ($)">0.5</td>
+                        <td data-label="Реф. система">Да</td>
+                        <td data-label="Платежные системы">PayPal, Qiwi</td>
+                        <td data-label="Тип работы">Клики, Рефералы</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Название"><a href="#">PayClick</a></td>
+                        <td data-label="Мин. вывод ($)">1.0</td>
+                        <td data-label="Реф. система">Нет</td>
+                        <td data-label="Платежные системы">WebMoney</td>
+                        <td data-label="Тип работы">Задания</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Название"><a href="#">EarnFast</a></td>
+                        <td data-label="Мин. вывод ($)">2.0</td>
+                        <td data-label="Реф. система">Да</td>
+                        <td data-label="Платежные системы">PayPal, Банк</td>
+                        <td data-label="Тип работы">Опросы, Рефералы</td>
+                    </tr>
+                </tbody>
             </table>
-        </section>
-        <div id="pagination" aria-label="Навигация по страницам"></div>
-        <button id="themeToggleMobile" class="theme-toggle-mobile" aria-label="Переключить тему">🌙</button>
+        </div>
+
+        <!-- Пагинация -->
+        <div id="pagination">
+            <button id="prevPage" disabled>Назад</button>
+            <span id="pageInfo">Страница 1 из 1</span>
+            <button id="nextPage" disabled>Вперед</button>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- Панель настроек -->
+    <div id="settingsPanel" class="settings-panel hidden">
+        <h2>Настройки сайта</h2>
+        <button id="closeSettings" class="close-btn" aria-label="Закрыть настройки">✕</button>
+        <div class="settings-content">
+            <!-- Общие настройки -->
+            <div class="settings-section">
+                <h3>Общие</h3>
+                <label>
+                    Тема сайта
+                    <select id="themeSelect">
+                        <option value="light">Светлая</option>
+                        <option value="dark">Темная</option>
+                        <option value="auto">Авто (по системе)</option>
+                    </select>
+                </label>
+                <label>
+                    Размер шрифта (px)
+                    <input type="number" id="fontSize" min="12" max="24" value="16">
+                </label>
+                <label>
+                    Семейство шрифтов
+                    <select id="fontFamily">
+                        <option value="'Roboto', sans-serif">Roboto</option>
+                        <option value="'Open Sans', sans-serif">Open Sans</option>
+                        <option value="'Lato', sans-serif">Lato</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                    </select>
+                </label>
+            </div>
+
+            <!-- Цветовые настройки -->
+            <div class="settings-section">
+                <h3>Цвета</h3>
+                <label>
+                    Цвет фона
+                    <input type="color" id="backgroundColor" value="#f5f7fa">
+                </label>
+                <label>
+                    Основной цвет акцента
+                    <input type="color" id="accentColor" value="#1e90ff">
+                    <span class="description">Используется для кнопок, ссылок и акцентов</span>
+                </label>
+                <label>
+                    Цвет текста
+                    <input type="color" id="textColor" value="#2c3e50">
+                </label>
+            </div>
+
+            <!-- Эффекты -->
+            <div class="settings-section">
+                <h3>Эффекты</h3>
+                <label>
+                    Уровень анимаций
+                    <select id="animationLevel">
+                        <option value="0">Выкл</option>
+                        <option value="1">Минимальные</option>
+                        <option value="2" selected>Средние</option>
+                        <option value="3">Высокие</option>
+                        <option value="4">Максимальные</option>
+                    </select>
+                </label>
+                <label>
+                    Прозрачность фона (0-1)
+                    <input type="range" id="backgroundOpacity" min="0" max="1" step="0.1" value="0.15">
+                    <span class="range-value">0.15</span>
+                </label>
+                <label>
+                    Интенсивность теней (px)
+                    <input type="range" id="shadowIntensity" min="0" max="50" step="5" value="20">
+                    <span class="range-value">20</span>
+                </label>
+            </div>
+
+            <!-- Предварительный просмотр -->
+            <div class="settings-section">
+                <h3>Предпросмотр</h3>
+                <div class="preview" id="settingsPreview">
+                    Пример текста с текущими настройками
+                </div>
+            </div>
+        </div>
+        <button id="saveSettings" class="save-btn">Сохранить</button>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="settings.js"></script>
+    <script>
+        // Простой скрипт для переключения последних изменений (для примера)
+        document.getElementById('toggleLastChanges').addEventListener('click', () => {
+            const content = document.getElementById('lastChangesContent');
+            content.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>
