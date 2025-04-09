@@ -1,5 +1,5 @@
 // logic.js
-// Сортировddddddddddddddка таблицы
+// Сортировка таблицы
 function sortTable(columnIndex) {
     if (window.appState.sort.column === columnIndex) window.appState.sort.direction *= -1;
     else window.appState.sort.direction = 1;
@@ -145,7 +145,8 @@ function setTheme(theme) {
     localStorage.setItem('theme', theme);
     const icon = document.getElementById('themeToggle')?.querySelector('i');
     if (icon) {
-        icon.className = theme === 'light' ? window.appState.settings.customButtonIcons.themeToggle : 'fas fa-sun';
+        const defaultIcon = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        icon.className = window.appState.settings.customButtonIcons?.themeToggle || defaultIcon;
     }
 }
 
@@ -162,7 +163,8 @@ function setView() {
             window.uiModule.renderTable();
             const icon = document.getElementById('viewToggle')?.querySelector('i');
             if (icon) {
-                icon.className = window.appState.view === 'table' ? window.appState.settings.customButtonIcons.viewToggle : 'fas fa-th';
+                const defaultIcon = window.appState.view === 'table' ? 'fas fa-table' : 'fas fa-th';
+                icon.className = window.appState.settings.customButtonIcons?.viewToggle || defaultIcon;
             }
         }, 300);
     }
@@ -263,7 +265,7 @@ async function init() {
             isChangesVisible: true,
             isLoading: true,
             performanceLevel: 2,
-            settings: {}
+            settings: { customButtonIcons: { themeToggle: 'fas fa-moon', viewToggle: 'fas fa-table' } }
         };
     }
 
@@ -274,6 +276,8 @@ async function init() {
     const savedSettings = localStorage.getItem('settings');
     if (savedSettings) {
         Object.assign(window.appState.settings, JSON.parse(savedSettings));
+    } else {
+        Object.assign(window.appState.settings, window.settingsModule?.appState?.settings || {});
     }
 
     setTheme(savedTheme);
@@ -283,14 +287,20 @@ async function init() {
     document.documentElement.style.fontSize = `${window.appState.fontSize}rem`;
     applyPerformanceLevel(savedPerformanceLevel);
 
-    const data = await fetchData();
-    window.appState.tableData = window.dataModule.parseTableJSON(data);
-    window.appState.originalTableData = [...window.appState.tableData];
-    window.uiModule.renderFilters(window.dataModule.parseFilterJSON(data));
-    window.appState.lastChanges = Array.isArray(data.changes) ? data.changes : [];
-    window.uiModule.updateLastChanges();
-    window.appState.isLoading = false;
-    window.uiModule.renderTable();
+    try {
+        const data = await fetchData();
+        window.appState.tableData = window.dataModule.parseTableJSON(data);
+        window.appState.originalTableData = [...window.appState.tableData];
+        window.uiModule.renderFilters(window.dataModule.parseFilterJSON(data));
+        window.appState.lastChanges = Array.isArray(data.changes) ? data.changes : [];
+        window.uiModule.updateLastChanges();
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        showError('Не удалось загрузить данные');
+    } finally {
+        window.appState.isLoading = false;
+        window.uiModule.renderTable();
+    }
 
     document.getElementById('toggleLastChanges')?.addEventListener('click', toggleLastChanges);
     document.getElementById('fontSizeIncrease')?.addEventListener('click', () => adjustFontSize(0.1));
