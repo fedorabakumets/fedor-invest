@@ -1,5 +1,5 @@
 // ui.js
-// Отрисовdddddddddddddddddddddddddddddddddddddddddddddка таблицы
+// Отрисовка таблицы
 function renderTable() {
     const tbody = document.getElementById('tableBody');
     const loadingIndicator = document.getElementById('loadingIndicator');
@@ -92,14 +92,14 @@ function renderFilters(filterData) {
                 const id = `${type}-left-${index}`;
                 const label = document.createElement('label');
                 label.setAttribute('for', id);
-                label.innerHTML = `<input type="checkbox" id="${id}" name="${type}" value="${item}" aria-label="${item}"><span>${window.dataModule.escapeHTML(item)}</span>`;
+                label.innerHTML = `<input aria-label="${item}" id="${id}" name="${type}" type="checkbox" value="${item}"/>${window.dataModule.escapeHTML(item)}`;
                 cols.left.appendChild(label);
             });
             rightItems.forEach((item, index) => {
                 const id = `${type}-right-${index}`;
                 const label = document.createElement('label');
                 label.setAttribute('for', id);
-                label.innerHTML = `<input type="checkbox" id="${id}" name="${type}" value="${item}" aria-label="${item}"><span>${window.dataModule.escapeHTML(item)}</span>`;
+                label.innerHTML = `<input aria-label="${item}" id="${id}" name="${type}" type="checkbox" value="${item}"/>${window.dataModule.escapeHTML(item)}`;
                 cols.right.appendChild(label);
             });
         }
@@ -150,7 +150,7 @@ function updateLastChanges() {
     const changesToShow = window.appState.lastChanges.slice(-window.dataModule.MAX_CHANGES_TO_SHOW).reverse();
     changesToShow.forEach(change => {
         const li = document.createElement('li');
-        const date = new Date(change.timestamp);
+        const date = new Date(change.timestamp.replace(' ', 'T'));
         const formattedTime = date.toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }).replace(',', '');
         const siteLink = window.dataModule.createLinkElement(change.site || 'неизвестный сайт');
         li.appendChild(document.createTextNode(`Сайт `));
