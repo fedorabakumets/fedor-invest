@@ -385,7 +385,8 @@
 
             // Если нет конкретных данных об изменении, просто указываем дату
             if (!oldValueText && !newValueText) {
-                div.appendChild(document.createTextNode(` было добавлено в ${timestamp}.`));
+                const formattedTime = formatDateTime(timestamp);
+                div.appendChild(document.createTextNode(` было добавлено в ${formattedTime}.`));
                 return div;
             }
 
@@ -424,8 +425,30 @@
                 div.appendChild(newValueSpan);
             }
 
-            div.appendChild(document.createTextNode(` в ${timestamp}.`));
+            const formattedTime = formatDateTime(timestamp);
+            div.appendChild(document.createTextNode(` в ${formattedTime}.`));
             return div;
+        }
+
+        function formatDateTime(dateStr) {
+            // Преобразует "28.04.2025 0:32:41" в "28.04.2025, 0:32:41"
+            if (!dateStr) return '';
+            const parts = dateStr.split(' ');
+            if (parts.length !== 2) return dateStr;
+            
+            const date = parts[0]; // "28.04.2025"
+            const time = parts[1]; // "0:32:41"
+            
+            // Форматируем время с нулями: "0:32:41" -> "00:32:41"
+            const timeParts = time.split(':');
+            if (timeParts.length === 3) {
+                const hours = timeParts[0].padStart(2, '0');
+                const minutes = timeParts[1].padStart(2, '0');
+                const seconds = timeParts[2].padStart(2, '0');
+                return `${date}, ${hours}:${minutes}:${seconds}`;
+            }
+            
+            return dateStr;
         }
 
         function parseRussianDate(dateStr) {
