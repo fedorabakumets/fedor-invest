@@ -28,6 +28,10 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 server.py"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
 
 [[workflows.workflow]]
 name = "Backup Site (Port 3000)"
@@ -36,18 +40,14 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd \"сайт 2\" && python3 server.py"
+waitForPort = 3000
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [[ports]]
 localPort = 3000
 externalPort = 3000
-
-[[ports]]
-localPort = 5000
-externalPort = 80
-
-[[ports]]
-localPort = 40339
-externalPort = 3001
 
 [deployment]
 deploymentTarget = "static"

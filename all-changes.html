@@ -366,6 +366,12 @@
             siteSpan.appendChild(createLinkElement(site));
             div.appendChild(siteSpan);
 
+            // Если нет конкретных данных об изменении, просто указываем дату
+            if (!oldValueText && !newValueText) {
+                div.appendChild(document.createTextNode(` было добавлено в ${timestamp}.`));
+                return div;
+            }
+
             let updatedVerb = '';
             if (!context.includes('сайт был добавлен')) {
                 if (gender === 'male') {
