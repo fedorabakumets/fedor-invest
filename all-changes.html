@@ -454,13 +454,14 @@
 
         function createLinkElement(text) {
             if (!text || text.trim() === '') return document.createTextNode('');
-            const urlPattern = /^(https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)$/i;
+            const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)/gi;
             const match = text.match(urlPattern);
             if (match) {
                 let url = match[0];
                 if (!url.match(/^https?:\/\//)) url = 'https://' + url;
                 const domainMatch = url.match(/^(?:https?:\/\/)?(?:www\.)?([^\/]+)/i);
                 let displayText = domainMatch ? domainMatch[1] : url;
+                // Делаем первую букву заглавной
                 displayText = displayText.charAt(0).toUpperCase() + displayText.slice(1);
                 const a = document.createElement('a');
                 a.href = url;
@@ -474,12 +475,6 @@
 
         function shortenSiteName(site) {
             if (!site) return '';
-            // Если это URL, извлекаем домен
-            if (site.match(/^https?:\/\//i)) {
-                const domainMatch = site.match(/^(?:https?:\/\/)?(?:www\.)?([^\/]+)/i);
-                site = domainMatch ? domainMatch[1] : site;
-            }
-            // Извлекаем имя сайта без расширения
             const match = site.match(/^(.+?)(?:\.[a-zA-Z]{2,})+$/);
             return match ? match[1] : site;
         }
