@@ -871,26 +871,14 @@
                 return isNaN(date.getTime()) ? null : date;
             }).filter(date => date !== null);
             appState.latestUpdateFromH = datesInH.length > 0 ? new Date(Math.max(...datesInH)) : null;
-            
-            const result = [];
-            rows.slice(1).forEach(row => {
-                if (!row[0]) return;
-                const payments = (row[4] || '').split(/,\s*/).filter(Boolean).map(normalizeText);
-                const work = (row[5] || '').split(/,\s*/).filter(Boolean).map(normalizeText);
-                const paymentSystems = payments.length > 0 ? payments : [''];
-                
-                paymentSystems.forEach(payment => {
-                    result.push({
-                        [COLUMN_KEYS[0]]: row[0] || '',
-                        [COLUMN_KEYS[1]]: normalizeText(row[1] || ''),
-                        [COLUMN_KEYS[2]]: normalizeText(row[2] || ''),
-                        [COLUMN_KEYS[3]]: normalizeText(row[3] || ''),
-                        [COLUMN_KEYS[4]]: payment,
-                        [COLUMN_KEYS[5]]: work.join('\n')
-                    });
-                });
-            });
-            return result;
+            return rows.slice(1).map(row => ({
+                [COLUMN_KEYS[0]]: row[0] || '',
+                [COLUMN_KEYS[1]]: normalizeText(row[1] || ''),
+                [COLUMN_KEYS[2]]: normalizeText(row[2] || ''),
+                [COLUMN_KEYS[3]]: normalizeText(row[3] || ''),
+                [COLUMN_KEYS[4]]: row[4] ? row[4].split(/,\s*/).map(normalizeText).join('\n') : '',
+                [COLUMN_KEYS[5]]: row[5] ? row[5].split(/,\s*/).map(normalizeText).join('\n') : ''
+            })).filter(row => row[COLUMN_KEYS[0]]);
         }
 
         function parseFilterCSV(csv) {
