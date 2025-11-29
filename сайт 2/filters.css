@@ -1,0 +1,170 @@
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 2px;
+    background: linear-gradient(135deg, #ffffff, #f0f4f8, #e6e6fa, #d8bfd8);
+    padding: 4px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.filter-section {
+    width: 48%;
+}
+
+.filter-toggle {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    color: #0066cc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px;
+    transition: background 0.3s ease;
+}
+
+.filter-toggle:hover {
+    background: rgba(0, 102, 204, 0.1);
+}
+
+.filter-content {
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.filter-section.collapsed .filter-content {
+    display: none;
+}
+
+.filter-column {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-section label {
+    font-size: 0.9rem;
+    color: #444;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.filter-section label:hover {
+    background: rgba(0, 255, 153, 0.2);
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.5);
+}
+
+.filter-section input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.filters-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 2px 0;
+}
+
+#resetFilters, .view-btn {
+    padding: 8px 15px;
+    background: linear-gradient(90deg, #0066cc, #00ff99);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.rows-toggle, .cols-toggle {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+.rows-btn, .cols-btn, .cols-add-btn {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #0066cc, #00ff99);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cols-add-btn {
+    background: linear-gradient(135deg, #00cc66, #0066cc);
+}
+
+.rows-btn span, .cols-btn span {
+    position: relative;
+    z-index: 1;
+}
+
+.rows-btn::before, .cols-btn::before, .cols-add-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.rows-btn:hover::before, .cols-btn:hover::before, .cols-add-btn:hover::before {
+    width: 200%;
+    height: 200%;
+}
+
+.rows-btn:hover, .cols-btn:hover, .cols-add-btn:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 25px rgba(0, 255, 153, 0.8);
+}
+
+.rows-btn.active, .cols-btn.active {
+    background: linear-gradient(135deg, #00ff99, #0066cc);
+    box-shadow: 0 0 20px rgba(0, 102, 204, 0.9);
+}
+
+#resetFilters:hover, .view-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 153, 0.8);
+}
+
+.filter-count {
+    display: inline-block;
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    background: linear-gradient(90deg, #00ff99, #0066cc);
+    color: white;
+    border-radius: 50%;
+    margin-left: 5px;
+}
