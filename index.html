@@ -83,24 +83,6 @@
             padding: 4px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 0 30px rgba(0, 102, 204, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .filters::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(173, 216, 230, 0.3), transparent);
-            animation: rotateGlow 10s infinite linear;
-        }
-
-        @keyframes rotateGlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         .filter-section {
