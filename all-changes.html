@@ -218,7 +218,6 @@
     <button id="load-more-btn" style="display: none;">Загрузить еще</button>
 
     <script>
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGnixVAvnj2eKui4co3sdcSCLSXJDIUIGW9GblUhrUJLzIyDRQWyZISHnuNnCMAXTkV2wJfXmao0qP/pub?gid=1531258534&single=true&output=csv';
         const ITEMS_PER_PAGE = 10;
         let allChanges = [];
         let currentPage = 1;
@@ -250,35 +249,33 @@
 
                 let response;
                 try {
-                    response = await fetch(csvUrl);
+                    response = await fetch('/api/changes');
                 } catch (error) {
                     throw new Error('Не удалось загрузить данные. Проверьте подключение к интернету и попробуйте снова.');
                 }
 
                 if (!response.ok) {
-                    throw new Error('Не удалось загрузить данные. Убедитесь, что у вас есть доступ к таблице, и попробуйте снова.');
+                    throw new Error('Не удалось загрузить данные. Попробуйте обновить страницу.');
                 }
 
-                const arrayBuffer = await response.arrayBuffer();
-                const decoder = new TextDecoder('utf-8');
-                const text = decoder.decode(arrayBuffer);
+                const data = await response.json();
 
-                if (typeof Papa === 'undefined') {
-                    throw new Error('Библиотека PapaParse недоступна. Пожалуйста, проверьте подключение к интернету или обновите страницу.');
-                }
-
-                const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-                if (!parsed.data || parsed.data.length === 0) {
+                if (!data || data.length === 0) {
                     throw new Error('Данные не найдены. Возможно, таблица пуста или произошла ошибка при загрузке.');
                 }
 
-                const data = parsed.data
-                    .filter(row => row['Дата и время'] && row['Ячейка'] && row['Сайт'])
-                    .sort((a, b) => new Date(b['Дата и время']) - new Date(a['Дата и время']));
+                // Преобразование формата данных с API в формат для отображения
+                const formattedData = data.map(item => ({
+                    'Дата и время': item.date,
+                    'Сайт': item.site,
+                    'Ячейка': item.change,
+                    'Старое значение': item.old,
+                    'Новое значение': item.new
+                }));
 
-                localStorage.setItem(cacheKey, JSON.stringify(data));
+                localStorage.setItem(cacheKey, JSON.stringify(formattedData));
                 localStorage.setItem(cacheTimestampKey, Date.now().toString());
-                return data;
+                return formattedData;
             } catch (error) {
                 throw error;
             }
