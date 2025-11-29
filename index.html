@@ -1416,30 +1416,11 @@
                 const response = await fetch('/api/changes');
                 if (!response.ok) throw new Error('Failed to load changes');
                 const data = await response.json();
-                appState.lastChanges = data.slice(0, 5).map(item => {
-                    let siteName = item.site || '';
-                    let siteUrl = siteName;
-                    
-                    // Если уже URL, используем как есть
-                    if (siteName.startsWith('http')) {
-                        siteUrl = siteName;
-                        try {
-                            const url = new URL(siteName);
-                            siteName = url.hostname;
-                        } catch (e) {
-                            siteName = siteName.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
-                        }
-                    } else if (!siteName.startsWith('http')) {
-                        // Если просто имя, добавляем https
-                        siteUrl = `https://${siteName}`;
-                    }
-                    
-                    return {
-                        name: siteName,
-                        url: siteUrl,
-                        date: `${item.datetime}` // формат "28.04.2025 03:11:04"
-                    };
-                });
+                appState.lastChanges = data.slice(0, 5).map(item => ({
+                    name: item.site,
+                    url: `https://${item.site}`,
+                    date: `${item.datetime}` // формат "28.04.2025 03:11:04"
+                }));
             } catch (error) {
                 console.warn('Could not load last changes:', error);
                 appState.lastChanges = [];
