@@ -1339,11 +1339,14 @@
                 const li = document.createElement('li');
                 let formattedDate = change.date || '';
                 
-                // Если это дата в формате "28.04.2025" (с дефисом или точкой), добавляем время 00:00:00
-                if (formattedDate.match(/^\d{2}\.\d{2}\.\d{4}$/)) {
+                // Формат "28.04.2025 03:11:04" - оставляем как есть
+                if (formattedDate.match(/^\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2}$/)) {
+                    // Уже в правильном формате
+                }
+                // Если это дата в формате "28.04.2025" (без времени), добавляем время 00:00:00
+                else if (formattedDate.match(/^\d{2}\.\d{2}\.\d{4}$/)) {
                     formattedDate = `${formattedDate}, 00:00:00`;
                 }
-                // Если это дата "28.04.2025 03:11:04", оставляем как есть
                 // Если это ISO формат, преобразуем
                 else if (formattedDate.includes('T') || /^\d{4}-\d{2}-\d{2}/.test(formattedDate)) {
                     const date = new Date(formattedDate);
@@ -1408,6 +1411,23 @@
             });
         }
 
+        async function loadLastChanges() {
+            try {
+                const response = await fetch('/api/changes');
+                if (!response.ok) throw new Error('Failed to load changes');
+                const data = await response.json();
+                appState.lastChanges = data.slice(0, 5).map(item => ({
+                    name: item.site,
+                    url: `https://${item.site}`,
+                    date: `${item.datetime}` // формат "28.04.2025 03:11:04"
+                }));
+            } catch (error) {
+                console.warn('Could not load last changes:', error);
+                appState.lastChanges = [];
+            }
+            updateLastChanges();
+        }
+
         async function init() {
             try {
                 const [tableCsv, filterCsv] = await Promise.all([
@@ -1417,14 +1437,9 @@
                 appState.originalTableData = parseCSV(tableCsv);
                 appState.tableData = [...appState.originalTableData];
                 const filterData = parseFilterCSV(filterCsv);
-                appState.lastChanges = appState.originalTableData.slice(0, 5).map(row => ({
-                    name: row[COLUMN_KEYS[0]],
-                    url: row[COLUMN_KEYS[0]],
-                    date: new Date().toISOString()
-                }));
                 renderTable();
                 renderFilters(filterData);
-                updateLastChanges();
+                loadLastChanges();
                 setTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
                 appState.fontSize = parseFloat(localStorage.getItem('fontSize')) || 1;
                 document.documentElement.style.fontSize = `${appState.fontSize}rem`;
