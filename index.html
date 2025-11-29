@@ -425,6 +425,37 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
+        .payment-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .payment-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            title: attr(data-payment);
+        }
+
+        .payment-paypal { background: #003087; }
+        .payment-yandex { background: #FFCC00; color: #0066cc; }
+        .payment-webmoney { background: #2c3e50; }
+        .payment-crypto { background: #F7931A; }
+        .payment-card { background: #1A1F71; }
+        .payment-sberbank { background: #1F7F54; }
+        .payment-advcash { background: #6C63FF; }
+        .payment-payoneer { background: #00D4AA; }
+        .payment-wise { background: #347EFF; }
+
         td a {
             color: #0066cc;
             text-decoration: none;
@@ -1221,10 +1252,53 @@
             updatePaginationControls();
         }
 
+        function getPaymentIcon(paymentName) {
+            const payments = {
+                'paypal': { icon: 'PP', bg: 'payment-paypal' },
+                'яндекс': { icon: 'Я', bg: 'payment-yandex' },
+                'webmoney': { icon: 'WM', bg: 'payment-webmoney' },
+                'usdt': { icon: '₮', bg: 'payment-crypto' },
+                'bitcoin': { icon: '₿', bg: 'payment-crypto' },
+                'карта': { icon: '💳', bg: 'payment-card' },
+                'сбп': { icon: 'СБП', bg: 'payment-sberbank' },
+                'сберbank': { icon: 'SB', bg: 'payment-sberbank' },
+                'advcash': { icon: 'AC', bg: 'payment-advcash' },
+                'payoneer': { icon: 'PN', bg: 'payment-payoneer' },
+                'wise': { icon: 'W', bg: 'payment-wise' }
+            };
+            const lower = (paymentName || '').toLowerCase().trim();
+            for (const [key, val] of Object.entries(payments)) {
+                if (lower.includes(key)) return val;
+            }
+            return { icon: paymentName[0].toUpperCase(), bg: 'payment-card' };
+        }
+
+        function createPaymentIconsElement(value) {
+            if (!value || !value.trim()) return document.createTextNode('Не указано');
+            const container = document.createElement('div');
+            container.className = 'payment-icons';
+            const payments = value.split(',').map(p => p.trim()).filter(p => p);
+            payments.forEach(payment => {
+                const iconData = getPaymentIcon(payment);
+                const icon = document.createElement('span');
+                icon.className = `payment-icon ${iconData.bg}`;
+                icon.textContent = iconData.icon;
+                icon.title = payment;
+                container.appendChild(icon);
+            });
+            return container;
+        }
+
         function createTableCell(value, label, creator = (val => document.createTextNode(escapeHTML(val || 'Не указано')))) {
             const td = document.createElement('td');
             td.setAttribute('data-label', label);
-            td.appendChild(creator(value));
+            
+            if (label === 'Платежные системы') {
+                td.appendChild(createPaymentIconsElement(value));
+            } else {
+                td.appendChild(creator(value));
+            }
+            
             if (value && /\d+(\.\d+)?/.test(value)) td.classList.add('numeric');
             return td;
         }
