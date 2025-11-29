@@ -49,11 +49,11 @@
         const itemsPerPage = 5;
 
         const DEMO = [
-            { date: '2025-11-29', site: 'unknown сайт', change: 'сайт был добавлен', old: '', new: 'https://unknown.ru' },
-            { date: '2025-11-28', site: 'neobux', change: 'минимальная сумма вывода', old: '0.01', new: '0.02' },
-            { date: '2025-11-27', site: 'clixsense', change: 'сложность регистрации', old: 'Средняя', new: 'Легкая' },
-            { date: '2025-11-26', site: 'prizerebel', change: 'платежные системы', old: 'PayPal', new: 'PayPal, Amazon' },
-            { date: '2025-11-25', site: 'swagbucks', change: 'год создания', old: '2009', new: '2010' }
+            { date: '2025-11-29', site: 'neobux', change: 'сайт был добавлен', old: '', new: '' },
+            { date: '2025-11-28', site: 'clixsense', change: 'минимальная сумма вывода', old: '0.01', new: '0.02' },
+            { date: '2025-11-27', site: 'prizerebel', change: 'сложность регистрации', old: 'Средняя', new: 'Легкая' },
+            { date: '2025-11-26', site: 'swagbucks', change: 'платежные системы', old: 'PayPal', new: 'PayPal, Amazon' },
+            { date: '2025-11-25', site: 'clicksold', change: 'год создания', old: '2009', new: '2010' }
         ];
 
         function escape(t) {
@@ -75,11 +75,15 @@
             show.forEach(ch => {
                 const d = document.createElement('div');
                 d.className = 'change-item' + (ch.change.includes('добавлен') ? ' added' : '');
-                let h = `На сайте <span class="site-name">${escape(ch.site)}</span> ${escape(ch.change)} `;
-                if (ch.old) h += `с <span style="color:#999">${escape(ch.old)}</span> `;
-                if (ch.old || ch.new) h += `на `;
-                if (ch.new) h += `<span style="color:#27ae60;font-weight:bold">${escape(ch.new)}</span> `;
-                h += `<div class="date">${ch.date}</div>`;
+                let h = `На сайте <span class="site-name">${escape(ch.site)}</span> ${escape(ch.change)}`;
+                if (ch.old && ch.new) {
+                    h += ` с <span style="color:#999">${escape(ch.old)}</span> на <span style="color:#27ae60;font-weight:bold">${escape(ch.new)}</span>`;
+                } else if (ch.old) {
+                    h += ` с <span style="color:#999">${escape(ch.old)}</span>`;
+                } else if (ch.new) {
+                    h += ` на <span style="color:#27ae60;font-weight:bold">${escape(ch.new)}</span>`;
+                }
+                h += ` <div class="date">${ch.date}</div>`;
                 d.innerHTML = h;
                 c.appendChild(d);
             });
