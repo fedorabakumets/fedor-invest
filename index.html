@@ -1053,8 +1053,38 @@
             lastUpdated: null,
             latestUpdateFromH: null,
             filterStates: { paymentFilters: true, workFilters: true },
-            fontSize: 1
+            fontSize: 1,
+            paymentUrls: {}
         };
+
+        async function loadPaymentUrls() {
+            try {
+                // Загружаем CSV из листа "Фильтры" (gid должен быть ID этого листа)
+                const url = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=0';
+                const response = await fetch(url);
+                const csv = await response.text();
+                const lines = csv.trim().split('\n');
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i];
+                    if (!line.trim()) continue;
+                    
+                    // Парсим CSV корректно (с учетом кавычек)
+                    const matches = line.match(/^"([^"]+)"\s*,\s*"([^"]+)"/);
+                    if (matches) {
+                        const payment = matches[1].trim();
+                        const urlLink = matches[2].trim();
+                        if (payment && urlLink.startsWith('http')) {
+                            appState.paymentUrls[payment.toLowerCase()] = urlLink;
+                            console.log(`Loaded: ${payment} -> ${urlLink}`);
+                        }
+                    }
+                }
+                console.log('Payment URLs loaded:', appState.paymentUrls);
+            } catch (e) {
+                console.error('Could not load payment URLs:', e);
+            }
+        }
 
         function toggleView() {
             appState.view = appState.view === 'table' ? 'cards' : 'table';
@@ -1259,27 +1289,39 @@
         }
 
         function getPaymentIcon(paymentName) {
-            const payments = {
-                'paypal': { icon: '<i class="fab fa-paypal"></i>', bg: 'payment-paypal', url: 'https://paypal.com' },
-                'яндекс': { icon: 'Я', bg: 'payment-yandex', fontSize: '18px', url: 'https://yandex.ru/kassa' },
-                'webmoney': { icon: 'W', bg: 'payment-webmoney', fontSize: '16px', fontWeight: 'bold', url: 'https://webmoney.ru' },
-                'usdt': { icon: '<i class="fas fa-coins"></i>', bg: 'payment-usdt', url: 'https://tether.to' },
-                'bitcoin': { icon: '<i class="fab fa-bitcoin"></i>', bg: 'payment-bitcoin', url: 'https://bitcoin.org' },
-                'карта': { icon: '<i class="fas fa-credit-card"></i>', bg: 'payment-card', url: '#' },
-                'сбп': { icon: 'СБП', bg: 'payment-sberbank', fontSize: '10px', url: '#' },
-                'сберbank': { icon: '<i class="fas fa-university"></i>', bg: 'payment-sberbank', url: 'https://sberbank.ru' },
-                'advcash': { icon: 'AC', bg: 'payment-advcash', fontSize: '11px', fontWeight: 'bold', url: 'https://advcash.com' },
-                'payoneer': { icon: '<i class="fas fa-wallet"></i>', bg: 'payment-payoneer', url: 'https://payoneer.com' },
-                'wise': { icon: '<i class="fas fa-exchange-alt"></i>', bg: 'payment-wise', url: 'https://wise.com' },
-                'stripe': { icon: '<i class="fas fa-stream"></i>', bg: 'payment-stripe', url: 'https://stripe.com' },
-                'perfect money': { icon: 'PM', bg: 'payment-card', url: 'https://perfectmoney.is' },
-                'epayments': { icon: 'EP', bg: 'payment-card', url: 'https://epayments.com' },
-                'paxum': { icon: 'PX', bg: 'payment-card', url: 'https://paxum.com' },
-                'okpay': { icon: 'OK', bg: 'payment-card', url: 'https://okpay.com' }
+            const defaultPayments = {
+                'paypal': { icon: '<i class="fab fa-paypal"></i>', bg: 'payment-paypal' },
+                'яндекс': { icon: 'Я', bg: 'payment-yandex', fontSize: '18px' },
+                'webmoney': { icon: 'W', bg: 'payment-webmoney', fontSize: '16px', fontWeight: 'bold' },
+                'usdt': { icon: '<i class="fas fa-coins"></i>', bg: 'payment-usdt' },
+                'bitcoin': { icon: '<i class="fab fa-bitcoin"></i>', bg: 'payment-bitcoin' },
+                'карта': { icon: '<i class="fas fa-credit-card"></i>', bg: 'payment-card' },
+                'сбп': { icon: 'СБП', bg: 'payment-sberbank', fontSize: '10px' },
+                'сберbank': { icon: '<i class="fas fa-university"></i>', bg: 'payment-sberbank' },
+                'advcash': { icon: 'AC', bg: 'payment-advcash', fontSize: '11px', fontWeight: 'bold' },
+                'payoneer': { icon: '<i class="fas fa-wallet"></i>', bg: 'payment-payoneer' },
+                'wise': { icon: '<i class="fas fa-exchange-alt"></i>', bg: 'payment-wise' },
+                'stripe': { icon: '<i class="fas fa-stream"></i>', bg: 'payment-stripe' },
+                'perfect money': { icon: 'PM', bg: 'payment-card' },
+                'epayments': { icon: 'EP', bg: 'payment-card' },
+                'paxum': { icon: 'PX', bg: 'payment-card' },
+                'okpay': { icon: 'OK', bg: 'payment-card' }
             };
+            
             const lower = (paymentName || '').toLowerCase().trim();
-            for (const [key, val] of Object.entries(payments)) {
-                if (lower.includes(key)) return val;
+            
+            // Проверяем загруженные URLs из Google Sheet
+            const loadedUrl = appState.paymentUrls[lower];
+            if (loadedUrl) {
+                const defaultIcon = defaultPayments[lower] || { icon: '<i class="fas fa-circle"></i>', bg: 'payment-card' };
+                return { ...defaultIcon, url: loadedUrl };
+            }
+            
+            // Fallback: ищем в дефолтных платежах
+            for (const [key, val] of Object.entries(defaultPayments)) {
+                if (lower.includes(key)) {
+                    return { ...val, url: '#' };
+                }
             }
             return { icon: '<i class="fas fa-circle"></i>', bg: 'payment-card', url: '#' };
         }
