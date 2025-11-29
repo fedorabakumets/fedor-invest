@@ -1328,6 +1328,134 @@
             document.getElementById('themeToggleMobile').textContent = theme === 'light' ? '🌙' : '☀';
         }
 
+        function getParamContext(param) {
+            const paramLower = (param || '').toLowerCase();
+            if (paramLower.includes('сложность')) {
+                return { text: `сложность регистрации`, gender: 'female' };
+            } else if (paramLower.includes('минимальная') || paramLower.includes('вывод')) {
+                return { text: `минимальная сумма вывода`, gender: 'female' };
+            } else if (paramLower.includes('реферал')) {
+                return { text: `реферальная система`, gender: 'female' };
+            } else if (paramLower.includes('год')) {
+                return { text: `год создания сайта`, gender: 'male' };
+            } else if (paramLower.includes('платёж') || paramLower.includes('платеж')) {
+                return { text: `список поддерживаемых платёжных систем`, gender: 'male' };
+            } else if (param) {
+                return { text: param.toLowerCase(), gender: 'neuter' };
+            } else {
+                return { text: `параметр`, gender: 'male' };
+            }
+        }
+
+        function shortenSiteName(site) {
+            if (!site) return '';
+            const match = site.match(/^(.+?)(?:\.[a-zA-Z]{2,})+$/);
+            return match ? match[1] : site;
+        }
+
+        function createChangeLinkElement(text) {
+            if (!text || text.trim() === '') return document.createTextNode('');
+            const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)/gi;
+            const match = text.match(urlPattern);
+            if (match) {
+                let url = match[0];
+                if (!url.match(/^https?:\/\//)) url = 'https://' + url;
+                const domainMatch = url.match(/^(?:https?:\/\/)?(?:www\.)?([^\/]+)/i);
+                let displayText = domainMatch ? domainMatch[1] : url;
+                displayText = displayText.charAt(0).toUpperCase() + displayText.slice(1);
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer nofollow';
+                a.textContent = escapeHTML(displayText);
+                return a;
+            }
+            return document.createTextNode(escapeHTML(text));
+        }
+
+        function formatChangeDateTime(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split(' ');
+            if (parts.length !== 2) return dateStr;
+            const date = parts[0];
+            const time = parts[1];
+            const timeParts = time.split(':');
+            if (timeParts.length === 3) {
+                const hours = timeParts[0].padStart(2, '0');
+                const minutes = timeParts[1].padStart(2, '0');
+                const seconds = timeParts[2].padStart(2, '0');
+                return `${date}, ${hours}:${minutes}:${seconds}`;
+            }
+            return dateStr;
+        }
+
+        function createChangeElement(change) {
+            const timestamp = change['Дата и время'] || 'дата неизвестна';
+            const param = change['Параметр'] || '';
+            const oldValueText = change['Было'] || '';
+            const newValueText = change['Стало'] || '';
+            const site = change['Сайт'] || '';
+            const displaySite = shortenSiteName(site);
+            const contextObj = getParamContext(param);
+            const context = contextObj.text;
+            const gender = contextObj.gender;
+
+            const li = document.createElement('li');
+            li.dataset.site = site;
+            li.dataset.timestamp = timestamp;
+
+            const sentenceStart = document.createTextNode(`На сайте `);
+            li.appendChild(sentenceStart);
+
+            const siteSpan = document.createElement('span');
+            siteSpan.className = 'site-name';
+            siteSpan.appendChild(createChangeLinkElement(site));
+            li.appendChild(siteSpan);
+
+            if (!oldValueText && !newValueText) {
+                const formattedTime = formatChangeDateTime(timestamp);
+                li.appendChild(document.createTextNode(` было добавлено в ${formattedTime}.`));
+                return li;
+            }
+
+            let updatedVerb = '';
+            if (gender === 'male') {
+                updatedVerb = ' обновлён';
+            } else if (gender === 'female') {
+                updatedVerb = ' обновлена';
+            } else {
+                updatedVerb = ' обновлено';
+            }
+
+            const sentenceMiddle = document.createTextNode(` ${context}${updatedVerb} `);
+            li.appendChild(sentenceMiddle);
+
+            if (oldValueText) {
+                li.appendChild(document.createTextNode('с '));
+                const oldValueSpan = document.createElement('span');
+                oldValueSpan.className = 'old-value';
+                oldValueSpan.appendChild(createChangeLinkElement(oldValueText));
+                li.appendChild(oldValueSpan);
+            }
+
+            if (oldValueText || newValueText) {
+                const arrowSpan = document.createElement('span');
+                arrowSpan.textContent = ' на ';
+                li.appendChild(arrowSpan);
+            }
+
+            if (newValueText) {
+                const newValueSpan = document.createElement('span');
+                newValueSpan.className = 'new-value';
+                newValueSpan.appendChild(createChangeLinkElement(newValueText));
+                li.appendChild(newValueSpan);
+            }
+
+            const formattedTime = formatChangeDateTime(timestamp);
+            li.appendChild(document.createTextNode(` в ${formattedTime}.`));
+            return li;
+        }
+
         function updateLastChanges() {
             const changesList = document.getElementById('changesList');
             if (!changesList || !appState.lastChanges) return;
@@ -1336,42 +1464,7 @@
                 ? appState.lastChanges.slice(0, 5) 
                 : [];
             recentChanges.forEach(change => {
-                const li = document.createElement('li');
-                let formattedDate = change.date || '';
-                
-                // Формат "28.04.2025 03:11:04" - оставляем как есть
-                if (formattedDate.match(/^\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2}$/)) {
-                    // Уже в правильном формате
-                }
-                // Если это дата в формате "28.04.2025" (без времени), добавляем время 00:00:00
-                else if (formattedDate.match(/^\d{2}\.\d{2}\.\d{4}$/)) {
-                    formattedDate = `${formattedDate}, 00:00:00`;
-                }
-                // Если это ISO формат, преобразуем
-                else if (formattedDate.includes('T') || /^\d{4}-\d{2}-\d{2}/.test(formattedDate)) {
-                    const date = new Date(formattedDate);
-                    if (!isNaN(date.getTime())) {
-                        const day = String(date.getDate()).padStart(2, '0');
-                        const month = String(date.getMonth() + 1).padStart(2, '0');
-                        const year = date.getFullYear();
-                        const hours = String(date.getHours()).padStart(2, '0');
-                        const minutes = String(date.getMinutes()).padStart(2, '0');
-                        const seconds = String(date.getSeconds()).padStart(2, '0');
-                        formattedDate = `${day}.${month}.${year}, ${hours}:${minutes}:${seconds}`;
-                    }
-                }
-                
-                let displayName = change.name;
-                try {
-                    const url = new URL(change.url || 'http://example.com');
-                    displayName = url.hostname;
-                    if (displayName.startsWith('www.')) displayName = displayName.slice(4);
-                    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-                } catch (e) {
-                    displayName = escapeHTML(change.name);
-                }
-                li.innerHTML = `Сайт <a href="${change.url || '#'}" target="_blank">${escapeHTML(displayName)}</a> обновлен ${formattedDate}`;
-                changesList.appendChild(li);
+                changesList.appendChild(createChangeElement(change));
             });
         }
 
@@ -1417,9 +1510,11 @@
                 if (!response.ok) throw new Error('Failed to load changes');
                 const data = await response.json();
                 appState.lastChanges = data.slice(0, 5).map(item => ({
-                    name: item.site,
-                    url: `https://${item.site}`,
-                    date: `${item.datetime}` // формат "28.04.2025 03:11:04"
+                    'Дата и время': item.datetime,
+                    'Сайт': item.site,
+                    'Параметр': item.param,
+                    'Было': item.old,
+                    'Стало': item.new
                 }));
             } catch (error) {
                 console.warn('Could not load last changes:', error);
