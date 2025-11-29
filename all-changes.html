@@ -428,6 +428,26 @@
             return div;
         }
 
+        function parseRussianDate(dateStr) {
+            // Формат: "28.04.2025 0:32:41"
+            const parts = dateStr.split(' ');
+            if (parts.length !== 2) return new Date(0);
+            
+            const dateParts = parts[0].split('.');
+            const timeParts = parts[1].split(':');
+            
+            if (dateParts.length !== 3 || timeParts.length !== 3) return new Date(0);
+            
+            const day = parseInt(dateParts[0], 10);
+            const month = parseInt(dateParts[1], 10) - 1; // JavaScript месяцы с 0
+            const year = parseInt(dateParts[2], 10);
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+            const seconds = parseInt(timeParts[2], 10);
+            
+            return new Date(year, month, day, hours, minutes, seconds);
+        }
+
         function applySort(changes) {
             const sortValue = document.getElementById('sort').value;
             localStorage.setItem('sortPreference', sortValue);
@@ -435,10 +455,10 @@
             let sortedChanges = [...changes];
             switch (sortValue) {
                 case 'date-desc':
-                    sortedChanges.sort((a, b) => new Date(b['Дата и время']) - new Date(a['Дата и время']));
+                    sortedChanges.sort((a, b) => parseRussianDate(b['Дата и время']) - parseRussianDate(a['Дата и время']));
                     break;
                 case 'date-asc':
-                    sortedChanges.sort((a, b) => new Date(a['Дата и время']) - new Date(b['Дата и время']));
+                    sortedChanges.sort((a, b) => parseRussianDate(a['Дата и время']) - parseRussianDate(b['Дата и время']));
                     break;
                 case 'site-asc':
                     sortedChanges.sort((a, b) => a['Сайт'].localeCompare(b['Сайт'], 'ru'));
