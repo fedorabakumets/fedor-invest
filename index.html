@@ -1376,8 +1376,10 @@
 
         function shortenSiteName(site) {
             if (!site) return '';
-            const match = site.match(/^(.+?)(?:\.[a-zA-Z]{2,})+$/);
-            return match ? match[1] : site;
+            // If site already has a domain extension, return as is
+            if (/\.[a-zA-Z]{2,}$/.test(site)) return site;
+            // If not, add .com
+            return site + '.com';
         }
 
         function createChangeLinkElement(text) {
