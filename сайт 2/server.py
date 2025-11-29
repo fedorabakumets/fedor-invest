@@ -5,9 +5,13 @@ import urllib.request
 import json
 import csv
 import io
+import os
 
 PORT = 3000
 HOST = "0.0.0.0"
+DIRECTORY = "."
+
+os.chdir(DIRECTORY)
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
