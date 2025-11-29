@@ -164,8 +164,11 @@ function getPaymentData() {
                 }
             } else {
                 const richText = cell.getRichTextValue();
-                const link = richText ? richText.getLinkUrl(0) : null;
-                url = link || '';
+                if (richText) {
+                    const text = richText.getText();
+                    const linkUrl = richText.getLinkUrl(0, text.length);
+                    url = linkUrl || '';
+                }
             }
         } catch (e) {
             console.log(`getPaymentData: Ошибка при чтении гиперссылки из строки ${i}: ${e}`);
@@ -291,8 +294,11 @@ function createPaymentHyperlinksFormula(cell, paymentText) {
                     }
                 } else {
                     const richText = paymentCell.getRichTextValue();
-                    const link = richText ? richText.getLinkUrl(0) : null;
-                    url = link || '';
+                    if (richText) {
+                        const text = richText.getText();
+                        const link = richText.getLinkUrl(0, text.length);
+                        url = link || '';
+                    }
                 }
             } catch (e) {
                 console.log(`createPaymentHyperlinksFormula: Ошибка при чтении платежа: ${e}`);
