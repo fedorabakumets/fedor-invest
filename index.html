@@ -742,7 +742,6 @@
                         <th onclick="sortTable(3)">Сложность регистрации <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
                         <th onclick="sortTable(4)">Платежные системы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
                         <th onclick="sortTable(5)">Тип работы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(6)">Отзывы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -758,7 +757,7 @@
         const COLUMN_KEYS = [
             'Название сайта', 'Дата создания', 'Минимальная сумма вывода',
             'Сложность регистрации', 'Платежные системы',
-            'Тип работы', 'Отзывы'
+            'Тип работы'
         ];
         const DIFFICULTY_ORDER = { Легкая: 1, Средняя: 2, Сложная: 3 };
         const TABLE_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
