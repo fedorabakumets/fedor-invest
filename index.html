@@ -1376,10 +1376,16 @@
 
         function shortenSiteName(site) {
             if (!site) return '';
-            // If site already has a domain extension, return as is
-            if (/\.[a-zA-Z]{2,}$/.test(site)) return site;
-            // If not, add .com
-            return site + '.com';
+            let result;
+            // If site already has a domain extension, use as is
+            if (/\.[a-zA-Z]{2,}$/.test(site)) {
+                result = site;
+            } else {
+                // If not, add .com
+                result = site + '.com';
+            }
+            // Capitalize first letter
+            return result.charAt(0).toUpperCase() + result.slice(1);
         }
 
         function createChangeLinkElement(text) {
