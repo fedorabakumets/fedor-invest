@@ -436,25 +436,31 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 16px;
             color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            title: attr(data-payment);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .payment-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
         }
 
         .payment-paypal { background: #003087; }
-        .payment-yandex { background: #FFCC00; color: #0066cc; }
+        .payment-yandex { background: #FFCC00; color: #0066cc; font-weight: bold; }
         .payment-webmoney { background: #2c3e50; }
-        .payment-crypto { background: #F7931A; }
+        .payment-usdt { background: #26A17B; }
+        .payment-bitcoin { background: #F7931A; }
         .payment-card { background: #1A1F71; }
         .payment-sberbank { background: #1F7F54; }
         .payment-advcash { background: #6C63FF; }
         .payment-payoneer { background: #00D4AA; }
         .payment-wise { background: #347EFF; }
+        .payment-stripe { background: #635BFF; }
 
         td a {
             color: #0066cc;
@@ -1254,23 +1260,24 @@
 
         function getPaymentIcon(paymentName) {
             const payments = {
-                'paypal': { icon: 'PP', bg: 'payment-paypal' },
-                'яндекс': { icon: 'Я', bg: 'payment-yandex' },
-                'webmoney': { icon: 'WM', bg: 'payment-webmoney' },
-                'usdt': { icon: '₮', bg: 'payment-crypto' },
-                'bitcoin': { icon: '₿', bg: 'payment-crypto' },
-                'карта': { icon: '💳', bg: 'payment-card' },
-                'сбп': { icon: 'СБП', bg: 'payment-sberbank' },
-                'сберbank': { icon: 'SB', bg: 'payment-sberbank' },
-                'advcash': { icon: 'AC', bg: 'payment-advcash' },
-                'payoneer': { icon: 'PN', bg: 'payment-payoneer' },
-                'wise': { icon: 'W', bg: 'payment-wise' }
+                'paypal': { icon: '<i class="fab fa-paypal"></i>', bg: 'payment-paypal' },
+                'яндекс': { icon: 'Я', bg: 'payment-yandex', fontSize: '18px' },
+                'webmoney': { icon: 'W', bg: 'payment-webmoney', fontSize: '16px', fontWeight: 'bold' },
+                'usdt': { icon: '<i class="fas fa-coins"></i>', bg: 'payment-usdt' },
+                'bitcoin': { icon: '<i class="fab fa-bitcoin"></i>', bg: 'payment-bitcoin' },
+                'карта': { icon: '<i class="fas fa-credit-card"></i>', bg: 'payment-card' },
+                'сбп': { icon: 'СБП', bg: 'payment-sberbank', fontSize: '10px' },
+                'сберbank': { icon: '<i class="fas fa-university"></i>', bg: 'payment-sberbank' },
+                'advcash': { icon: 'AC', bg: 'payment-advcash', fontSize: '11px', fontWeight: 'bold' },
+                'payoneer': { icon: '<i class="fas fa-wallet"></i>', bg: 'payment-payoneer' },
+                'wise': { icon: '<i class="fas fa-exchange-alt"></i>', bg: 'payment-wise' },
+                'stripe': { icon: '<i class="fas fa-stream"></i>', bg: 'payment-stripe' }
             };
             const lower = (paymentName || '').toLowerCase().trim();
             for (const [key, val] of Object.entries(payments)) {
                 if (lower.includes(key)) return val;
             }
-            return { icon: paymentName[0].toUpperCase(), bg: 'payment-card' };
+            return { icon: '<i class="fas fa-circle"></i>', bg: 'payment-card' };
         }
 
         function createPaymentIconsElement(value) {
@@ -1282,7 +1289,9 @@
                 const iconData = getPaymentIcon(payment);
                 const icon = document.createElement('span');
                 icon.className = `payment-icon ${iconData.bg}`;
-                icon.textContent = iconData.icon;
+                icon.innerHTML = iconData.icon;
+                if (iconData.fontSize) icon.style.fontSize = iconData.fontSize;
+                if (iconData.fontWeight) icon.style.fontWeight = iconData.fontWeight;
                 icon.title = payment;
                 container.appendChild(icon);
             });
