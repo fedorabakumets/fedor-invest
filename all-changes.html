@@ -126,6 +126,23 @@
             background: #999;
             cursor: not-allowed;
         }
+        #back-btn {
+            display: block;
+            margin: 10px auto 15px;
+            padding: 8px 20px;
+            background: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            text-align: center;
+            font-size: 14px;
+        }
+        #back-btn:hover {
+            background: #444;
+        }
         #loading {
             display: none;
             text-align: center;
@@ -159,7 +176,7 @@
             body { max-width: 100%; padding: 0 5px; }
             h1 { font-size: 16px; }
             .change-item { font-size: 12px; padding: 8px; }
-            #refresh-btn, #load-more-btn { padding: 6px 15px; font-size: 14px; }
+            #refresh-btn, #load-more-btn, #back-btn { padding: 6px 15px; font-size: 14px; }
             #loading { font-size: 14px; }
             #filter-clear { right: calc(50% - 130px); }
         }
@@ -167,7 +184,7 @@
             body { max-width: 80%; padding: 0 15px; }
             h1 { font-size: 18px; }
             .change-item { font-size: 13px; padding: 9px; }
-            #refresh-btn, #load-more-btn { padding: 7px 18px; font-size: 15px; }
+            #refresh-btn, #load-more-btn, #back-btn { padding: 7px 18px; font-size: 15px; }
             #loading { font-size: 15px; }
             #filter-clear { right: calc(50% - 135px); }
         }
@@ -175,12 +192,13 @@
             body { max-width: 400px; padding: 0 10px; }
             h1 { font-size: 20px; }
             .change-item { font-size: 14px; padding: 10px; }
-            #refresh-btn, #load-more-btn { padding: 8px 20px; font-size: 16px; }
+            #refresh-btn, #load-more-btn, #back-btn { padding: 8px 20px; font-size: 16px; }
             #loading { font-size: 16px; }
         }
     </style>
 </head>
 <body>
+    <a href="index.html" id="back-btn">← Вернуться на главную</a>
     <h1>Последние изменения в таблице сайтов</h1>
     <div id="filter-container">
         <input type="text" id="filter" placeholder="Поиск по названию сайта">
