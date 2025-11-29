@@ -760,8 +760,8 @@
             'Тип работы'
         ];
         const DIFFICULTY_ORDER = { Легкая: 1, Средняя: 2, Сложная: 3 };
-        const TABLE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGnixVAvnj2eKui4co3sdcSCLSXJDIUIGW9GblUhrUJLzIyDRQWyZISHnuNnCMAXTkV2wJfXmao0qP/pub?gid=1897875028&single=true&output=csv';
-        const FILTERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGnixVAvnj2eKui4co3sdcSCLSXJDIUIGW9GblUhrUJLzIyDRQWyZISHnuNnCMAXTkV2wJfXmao0qP/pub?gid=2048557735&single=true&output=csv';
+        const TABLE_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
+        const FILTERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
         const SUPPORTED_LOCALES = ['ru-RU', 'en-US', 'fr-FR'];
         const RETRY_DELAYS = [1000, 2000, 4000];
 
@@ -886,9 +886,15 @@
                 row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.trim().replace(/^"|"$/g, ''))
             );
             if (rows.length < 2) return { payments: [], work: [] };
+            const payments = new Set();
+            const work = new Set();
+            rows.slice(1).forEach(row => {
+                (row[4] || '').split(/,\s*/).forEach(p => { if (p) payments.add(normalizeText(p)); });
+                (row[5] || '').split(/,\s*/).forEach(w => { if (w) work.add(normalizeText(w)); });
+            });
             return {
-                payments: [...new Set(rows.slice(1).map(row => normalizeText(row[1])).filter(Boolean))].sort(),
-                work: [...new Set(rows.slice(1).map(row => normalizeText(row[2])).filter(Boolean))].sort()
+                payments: [...payments].sort(),
+                work: [...work].sort()
             };
         }
 
