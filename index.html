@@ -797,35 +797,51 @@
         }
 
         .cards-view table tbody tr {
-            display: block;
-            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 1fr;
+            margin-bottom: 20px;
             border: 2px solid #0066cc;
-            border-radius: 8px;
+            border-radius: 10px;
             background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            padding: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+            padding: 16px;
             transition: all 0.3s ease;
             width: 100%;
             box-sizing: border-box;
+            gap: 12px;
         }
 
         .cards-view table tbody tr:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(0, 255, 153, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.2);
+            border-color: #3366dd;
         }
 
         .cards-view table tbody td {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 10px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 0;
             border: none;
-            border-bottom: 1px solid #e0e0e0;
-            text-align: right;
             background: transparent;
             width: 100%;
             box-sizing: border-box;
-            flex-wrap: wrap;
-            gap: 5px;
+        }
+
+        .cards-view table tbody td:first-child {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8e8e8;
+            gap: 15px;
+        }
+
+        .cards-view table tbody td:nth-child(2) {
+            grid-column: 1 / -1;
+            padding-top: 6px;
         }
 
         .cards-view table tbody td:last-child {
@@ -834,18 +850,39 @@
 
         .cards-view table tbody td::before {
             content: attr(data-label);
-            font-weight: bold;
+            font-weight: 600;
             color: #0066cc;
             text-align: left;
-            flex: 0 0 auto;
-            margin-right: 10px;
+            font-size: 0.95em;
+            display: block;
+            margin-bottom: 4px;
+            grid-column: 1 / -1;
         }
 
         .cards-view table tbody td a,
         .cards-view table tbody td span {
-            flex: 1 1 auto;
             word-break: break-word;
-            text-align: right;
+            text-align: left;
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .cards-view table tbody td:first-child a {
+            font-weight: 600;
+            font-size: 1.05em;
+            color: #0066cc;
+            grid-column: 1;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .cards-view table tbody td:nth-child(2)::before {
+            content: none;
+        }
+
+        .cards-view table tbody td:nth-child(2) {
+            display: contents;
         }
 
         [data-theme="dark"] .cards-view table tbody tr {
