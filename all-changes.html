@@ -212,13 +212,39 @@
             #refresh-btn, #load-more-btn, #back-btn { padding: 8px 20px; font-size: 16px; }
             #loading { font-size: 16px; }
         }
-        #calendar-container {
-            margin: 20px 0;
-            padding: 15px;
-            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+        #date-filter-btn {
+            padding: 8px 16px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        #date-filter-btn:hover {
+            background: #229954;
+            transform: scale(1.05);
+        }
+        #date-filter-btn.active {
+            background: #1e8449;
+        }
+        #calendar-dropdown {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 2px solid #27ae60;
             border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            margin-top: 5px;
+            max-width: 350px;
+        }
+        #calendar-dropdown.show {
+            display: block;
         }
         .calendar-header {
             display: flex;
@@ -228,44 +254,47 @@
             gap: 10px;
         }
         .calendar-nav-btn {
-            padding: 6px 12px;
+            padding: 4px 8px;
             background: #27ae60;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
             font-weight: bold;
             transition: background 0.3s;
+            font-size: 12px;
         }
         .calendar-nav-btn:hover {
             background: #229954;
         }
         .calendar-month-year {
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
             color: #27ae60;
-            min-width: 150px;
+            min-width: 120px;
         }
         .calendar-days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            gap: 3px;
             margin-bottom: 10px;
         }
         .calendar-day-name {
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
-            padding: 5px;
+            padding: 3px;
+            text-align: center;
         }
         .calendar-day {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
             cursor: pointer;
             background: white;
             transition: all 0.2s;
-            font-size: 13px;
+            font-size: 12px;
+            text-align: center;
         }
         .calendar-day:hover {
             background: #27ae60;
@@ -283,41 +312,39 @@
             border-color: #27ae60;
         }
         .calendar-day.disabled {
-            color: #ccc;
+            color: #ddd;
             cursor: not-allowed;
+            background: #f9f9f9;
         }
         .calendar-clear-btn {
-            padding: 6px 12px;
+            padding: 4px 8px;
             background: #999;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             transition: background 0.3s;
         }
         .calendar-clear-btn:hover {
             background: #777;
-        }
-        .calendar-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <a href="index.html" id="back-btn">← Вернуться на главную</a>
     <h1>Последние изменения в таблице сайтов</h1>
-    <div id="calendar-container">
-        <div class="calendar-header">
-            <button class="calendar-nav-btn" id="calendar-prev">← Пред.</button>
-            <div class="calendar-month-year" id="calendar-month-year"></div>
-            <button class="calendar-nav-btn" id="calendar-next">След. →</button>
-            <button class="calendar-clear-btn" id="calendar-clear">Очистить</button>
+    <div style="text-align: center; position: relative; margin: 15px 0;">
+        <button id="date-filter-btn">📅 Выбрать дату</button>
+        <div id="calendar-dropdown">
+            <div class="calendar-header">
+                <button class="calendar-nav-btn" id="calendar-prev">←</button>
+                <div class="calendar-month-year" id="calendar-month-year"></div>
+                <button class="calendar-nav-btn" id="calendar-next">→</button>
+            </div>
+            <div class="calendar-days" id="calendar-days"></div>
+            <button class="calendar-clear-btn" id="calendar-clear" style="width: 100%;">Очистить фильтр</button>
         </div>
-        <div class="calendar-days" id="calendar-days"></div>
-        <div class="calendar-info">Нажмите на дату, чтобы показать изменения за этот день</div>
     </div>
     <div id="filter-container">
         <input type="text" id="filter" placeholder="Поиск по названию сайта">
@@ -746,7 +773,6 @@
             }
             
             for (let day = 1; day <= daysInMonth; day++) {
-                const dateObj = new Date(year, month, day);
                 const dateStr = `${String(day).padStart(2, '0')}.${String(month + 1).padStart(2, '0')}.${year}`;
                 const hasChanges = datesWithChanges.has(dateStr);
                 const isSelected = selectedDate === dateStr;
@@ -781,6 +807,14 @@
             displayChanges(filteredChanges, currentPage);
         }
 
+        document.getElementById('date-filter-btn').addEventListener('click', () => {
+            const dropdown = document.getElementById('calendar-dropdown');
+            dropdown.classList.toggle('show');
+            if (dropdown.classList.contains('show')) {
+                renderCalendar();
+            }
+        });
+
         document.getElementById('calendar-prev').addEventListener('click', () => {
             calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() - 1);
             renderCalendar();
@@ -795,13 +829,21 @@
             selectedDate = null;
             filterByDate();
             renderCalendar();
+            document.getElementById('calendar-dropdown').classList.remove('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('calendar-dropdown');
+            const btn = document.getElementById('date-filter-btn');
+            if (!dropdown.contains(e.target) && e.target !== btn) {
+                dropdown.classList.remove('show');
+            }
         });
 
         // Инициализация
         window.onload = () => {
             initSort();
             loadChanges();
-            setTimeout(() => renderCalendar(), 500);
         };
     </script>
 </body>
