@@ -1,15 +1,18 @@
-# Earning Sites Comparison Table
+# Сравнение сайтов для заработка (Earning Sites Comparison)
 
 ## Overview
-This is a static website that provides a comprehensive comparison of Russian-language earning/click sites. It displays information about minimum withdrawal amounts, referral systems, payment methods, work types, and review sites.
+**ВАЖНО: Это СТАТИЧЕСКИЙ сайт.** Все изменения должны сохранять статическую архитектуру без добавления серверной логики.
+
+This is a **static website** that provides a comprehensive comparison of Russian-language earning/click sites. It displays information about minimum withdrawal amounts, referral systems, payment methods, work types, and review sites.
 
 **Last Updated:** November 29, 2025
 
 ## Project Type
-- **Type:** Static HTML/CSS/JavaScript Website
+- **Type:** STATIC HTML/CSS/JavaScript Website (no backend/server-side logic)
 - **Language:** Russian (ru)
-- **Framework:** Vanilla JavaScript (no build tools)
-- **Data Source:** Google Apps Script API
+- **Framework:** Vanilla JavaScript (no build tools, no bundlers)
+- **Data Source:** Google Apps Script API (external)
+- **Deployment:** Replit Static Hosting
 
 ## Project Structure
 ```
