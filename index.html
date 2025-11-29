@@ -602,6 +602,25 @@
             margin-bottom: 8px;
         }
 
+        .all-changes-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background: linear-gradient(90deg, #0066cc, #00ff99);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .all-changes-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 102, 204, 0.7);
+        }
+
         @media (max-width: 768px) {
             .filters {
                 flex-direction: column;
@@ -671,6 +690,9 @@
                 </button>
                 <div id="lastChangesContent" class="last-changes-content hidden">
                     <ul id="changesList"></ul>
+                    <a href="/all-changes.html" id="allChangesLink" class="all-changes-btn" aria-label="Посмотреть все изменения">
+                        <i class="fas fa-history"></i> Все изменения
+                    </a>
                 </div>
             </div>
             <button id="fontSizeIncrease" aria-label="Увеличить шрифт">+</button>
