@@ -760,8 +760,8 @@
             'Тип работы'
         ];
         const DIFFICULTY_ORDER = { Легкая: 1, Средняя: 2, Сложная: 3 };
-        const TABLE_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
-        const FILTERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
+        const TABLE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGnixVAvnj2eKui4co3sdcSCLSXJDIUIGW9GblUhrUJLzIyDRQWyZISHnuNnCMAXTkV2wJfXmao0qP/pub?gid=1897875028&single=true&output=csv';
+        const FILTERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGnixVAvnj2eKui4co3sdcSCLSXJDIUIGW9GblUhrUJLzIyDRQWyZISHnuNnCMAXTkV2wJfXmao0qP/pub?gid=2048557735&single=true&output=csv';
         const SUPPORTED_LOCALES = ['ru-RU', 'en-US', 'fr-FR'];
         const RETRY_DELAYS = [1000, 2000, 4000];
 
@@ -899,8 +899,8 @@
             );
             if (rows.length < 2) return { payments: [], work: [] };
             return {
-                payments: [...new Set(rows.slice(1).map(row => normalizeText(row[4])).filter(Boolean))].sort(),
-                work: [...new Set(rows.slice(1).map(row => normalizeText(row[5])).filter(Boolean))].sort()
+                payments: [...new Set(rows.slice(1).map(row => normalizeText(row[1])).filter(Boolean))].sort(),
+                work: [...new Set(rows.slice(1).map(row => normalizeText(row[2])).filter(Boolean))].sort()
             };
         }
 
@@ -965,14 +965,18 @@
             appState.tableData.sort((a, b) => {
                 let aValue = a[COLUMN_KEYS[columnIndex]] || '';
                 let bValue = b[COLUMN_KEYS[columnIndex]] || '';
-                if ([0, 3].includes(columnIndex)) return appState.sort.direction * aValue.localeCompare(bValue);
+                if (columnIndex === 7) {
+                    aValue = aValue.split('\n')[0];
+                    bValue = bValue.split('\n')[0];
+                }
+                if ([0, 3, 7].includes(columnIndex)) return appState.sort.direction * aValue.localeCompare(bValue);
                 if (columnIndex === 1) {
                     const aTime = Date.parse(aValue) || 0;
                     const bTime = Date.parse(bValue) || 0;
                     return appState.sort.direction * (aTime - bTime);
                 }
                 if (columnIndex === 2) return appState.sort.direction * (parseFloat(aValue) || 0 - parseFloat(bValue) || 0);
-                if (columnIndex === 3) return appState.sort.direction * ((DIFFICULTY_ORDER[aValue] || 0) - (DIFFICULTY_ORDER[bValue] || 0));
+                if (columnIndex === 4) return appState.sort.direction * ((DIFFICULTY_ORDER[aValue] || 0) - (DIFFICULTY_ORDER[bValue] || 0));
                 return appState.sort.direction * (aValue.split('\n').length - bValue.split('\n').length);
             });
             updateArrow(columnIndex);
@@ -1046,13 +1050,13 @@
             let filteredData = [...appState.originalTableData];
             if (selectedPayments.length > 0) {
                 filteredData = filteredData.filter(row => {
-                    const payments = row[COLUMN_KEYS[4]].split('\n').map(item => item.trim());
+                    const payments = row[COLUMN_KEYS[5]].split('\n').map(item => item.trim());
                     return selectedPayments.some(p => payments.includes(p));
                 });
             }
             if (selectedWork.length > 0) {
                 filteredData = filteredData.filter(row => {
-                    const work = row[COLUMN_KEYS[5]].split('\n').map(item => item.trim());
+                    const work = row.split('\n').map(item => item.trim());
                     return selectedWork.some(w => work.includes(w));
                 });
             }

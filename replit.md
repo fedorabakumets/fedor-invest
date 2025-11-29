@@ -31,6 +31,7 @@
    - Поиск по названию сайта
    - Сортировка (по дате/названию)
    - Постраничная загрузка
+   - Автоматическое кэширование (1 день)
    - Демо-данные при недоступности Google Sheets
 
 4. **Оформление и интерфейс**
@@ -46,7 +47,7 @@
 .
 ├── index.html           # Основной сайт (порт 5000)
 ├── all-changes.html     # Страница истории изменений (порт 5000)
-├── server.py            # Python сервер для index.html с Google Sheets API
+├── server.py            # Python сервер для index.html
 │
 ├── сайт 2/              # Альтернативная версия
 │   ├── index.html       # Основной файл (порт 3000)
@@ -68,22 +69,17 @@
 ```
 
 ## Servers Configuration
-- **Site 1 (Port 5000):** Python SimpleHTTPServer с API endpoint `/api/changes` для загрузки данных
-- **Site 2 (Port 3000):** Python SimpleHTTPServer с теми же возможностями
+- **Site 1 (Port 5000):** Python SimpleHTTPServer - служит `index.html` и `all-changes.html`
+- **Site 2 (Port 3000):** Python SimpleHTTPServer - служит файлы из папки `сайт 2/`
 
 ## Data Sources
 - **Main Table:** Google Sheets CSV (автоматическая загрузка)
-- **Changes History:** Google Sheets API через Replit интеграцию (с fallback на CSV)
+- **Changes History:** Google Sheets CSV (с демо-данными как fallback)
 - **Local Storage:** Кэширование данных на 1 день
 
-## Интеграции
-- **Google Sheets:** Авторизованный доступ через Replit интеграцию
-  - Позволяет безопасно получать данные с авторизацией
-  - Автоматическое управление токенами и refresh
-  - Fallback на CSV при недоступности API
-
 ## Known Issues
-Нет известных проблем. Система двухуровневого fallback обеспечивает надёжную работу.
+- Google Sheets CSV иногда недоступна из-за CORS/редиректов
+  - **Решение:** Автоматическое переключение на демо-данные
 
 ## Architecture Decisions
 
@@ -96,18 +92,17 @@
 - **Reason:** Обеспечить работоспособность даже при недоступности Google Sheets
 
 ### Date: November 29, 2025
-- **Decision:** Google Sheets интеграция с двухуровневым fallback
-- **Reason:** Безопасная авторизованная загрузка + надёжность
+- **Decision:** LocalStorage для кэширования с TTL (1 день)
+- **Reason:** Ускорить загрузку и снизить нагрузку на Google Sheets
 
 ## User Preferences
 - **Language:** Russian (говори на русском)
 - **Type:** STATIC SITE (статический сайт - БЕЗ серверной логики)
 - **Design:** Современный, с градиентами и анимациями
 - **Communication:** Неформальный, понятный
-- **Google Sheets:** Использует официальную Replit интеграцию
 
 ## Deployment
 Сайт готов к развёртыванию:
 - Статический контент - можно развернуть на любом статическом хостинге
-- API endpoint для получения данных - требует Python сервер
-- Все данные загружаются с Google Sheets (авторизованный доступ)
+- Нет зависимостей от серверной логики
+- Все данные загружаются с Google Sheets (публичное расшаривание)
