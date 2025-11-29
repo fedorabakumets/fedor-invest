@@ -887,6 +887,7 @@
             filters: { payments: [], work: [] },
             locale: 'ru-RU',
             theme: 'light',
+            view: 'table',
             user: null,
             page: 1,
             rowsPerPage: 10,
@@ -896,6 +897,35 @@
             filterStates: { paymentFilters: true, workFilters: true },
             fontSize: 1
         };
+
+        function toggleView() {
+            appState.view = appState.view === 'table' ? 'cards' : 'table';
+            const tableSection = document.querySelector('.table-section');
+            if (tableSection) {
+                tableSection.style.opacity = '0';
+                setTimeout(() => {
+                    tableSection.classList.toggle('cards-view', appState.view === 'cards');
+                    tableSection.style.opacity = '1';
+                    localStorage.setItem('view', appState.view);
+                    renderTable();
+                    updateViewButton();
+                }, 300);
+            }
+        }
+
+        function updateViewButton() {
+            const btn = document.getElementById('toggleViewBtn');
+            if (btn) {
+                const icon = btn.querySelector('i');
+                if (appState.view === 'cards') {
+                    icon.className = 'fas fa-table';
+                    btn.innerHTML = '<i class="fas fa-table"></i> Таблица';
+                } else {
+                    icon.className = 'fas fa-th';
+                    btn.innerHTML = '<i class="fas fa-th"></i> Карточки';
+                }
+            }
+        }
 
         function escapeHTML(text) {
             const tempDiv = document.createElement('div');
@@ -1023,19 +1053,41 @@
             const start = (appState.page - 1) * appState.rowsPerPage;
             const end = start + appState.rowsPerPage;
             const paginatedData = appState.tableData.slice(start, end);
-            paginatedData.forEach(row => {
-                const tr = document.createElement('tr');
-                for (let i = 0; i < COLUMN_KEYS.length; i++) {
-                    tr.appendChild(createTableCell(row[COLUMN_KEYS[i]], i === 0 ? createLinkElement : undefined));
-                }
-                tbody.appendChild(tr);
-            });
+
+            if (appState.view === 'cards') {
+                const columns = [[], []];
+                paginatedData.forEach((row, index) => {
+                    columns[index % 2].push(row);
+                });
+
+                columns.forEach((columnData) => {
+                    const colDiv = document.createElement('div');
+                    colDiv.className = 'card-column';
+                    columnData.forEach(row => {
+                        const tr = document.createElement('tr');
+                        for (let i = 0; i < COLUMN_KEYS.length; i++) {
+                            tr.appendChild(createTableCell(row[COLUMN_KEYS[i]], COLUMN_KEYS[i], i === 0 ? createLinkElement : undefined));
+                        }
+                        colDiv.appendChild(tr);
+                    });
+                    tbody.appendChild(colDiv);
+                });
+            } else {
+                paginatedData.forEach(row => {
+                    const tr = document.createElement('tr');
+                    for (let i = 0; i < COLUMN_KEYS.length; i++) {
+                        tr.appendChild(createTableCell(row[COLUMN_KEYS[i]], COLUMN_KEYS[i], i === 0 ? createLinkElement : undefined));
+                    }
+                    tbody.appendChild(tr);
+                });
+            }
             animateRows(tbody);
             updatePaginationControls();
         }
 
-        function createTableCell(value, creator = (val => document.createTextNode(escapeHTML(val || 'Не указано')))) {
+        function createTableCell(value, label, creator = (val => document.createTextNode(escapeHTML(val || 'Не указано')))) {
             const td = document.createElement('td');
+            td.setAttribute('data-label', label);
             td.appendChild(creator(value));
             if (value && /\d+(\.\d+)?/.test(value)) td.classList.add('numeric');
             return td;
@@ -1319,6 +1371,17 @@
                 document.getElementById('fontSizeIncrease').addEventListener('click', () => adjustFontSize(0.1));
                 document.getElementById('fontSizeDecrease').addEventListener('click', () => adjustFontSize(-0.1));
                 document.getElementById('themeToggleMobile').addEventListener('click', () => setTheme(appState.theme === 'light' ? 'dark' : 'light'));
+                document.getElementById('toggleViewBtn')?.addEventListener('click', toggleView);
+
+                const savedView = localStorage.getItem('view') || 'table';
+                if (savedView !== appState.view) {
+                    appState.view = savedView;
+                    const tableSection = document.querySelector('.table-section');
+                    if (tableSection) {
+                        tableSection.classList.toggle('cards-view', appState.view === 'cards');
+                    }
+                    updateViewButton();
+                }
                 document.querySelectorAll('.filter-toggle').forEach(toggle => {
                     toggle.addEventListener('click', () => {
                         const filterSection = toggle.closest('.filter-section');
