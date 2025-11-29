@@ -312,7 +312,9 @@
                 let url = match[0];
                 if (!url.match(/^https?:\/\//)) url = 'https://' + url;
                 const domainMatch = url.match(/^(?:https?:\/\/)?(?:www\.)?([^\/]+)/i);
-                const displayText = domainMatch ? domainMatch[1] : url;
+                let displayText = domainMatch ? domainMatch[1] : url;
+                // Делаем первую букву заглавной
+                displayText = displayText.charAt(0).toUpperCase() + displayText.slice(1);
                 const a = document.createElement('a');
                 a.href = url;
                 a.target = '_blank';
