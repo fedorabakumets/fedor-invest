@@ -1059,28 +1059,16 @@
 
         async function loadPaymentUrls() {
             try {
-                // Загружаем CSV из листа "Фильтры" (gid должен быть ID этого листа)
-                const url = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=0';
-                const response = await fetch(url);
-                const csv = await response.text();
-                const lines = csv.trim().split('\n');
+                const gasUrl = 'https://script.google.com/macros/s/AKfycbzWGrbYqTGpSMXIr3OvBGraRqKK2oOMmgRht-YMDoaEaeL5aXb0zcRtL893RyGfRdq0/exec?action=getPayments';
+                const response = await fetch(gasUrl);
+                const data = await response.json();
                 
-                for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i];
-                    if (!line.trim()) continue;
-                    
-                    // Парсим CSV корректно (с учетом кавычек)
-                    const matches = line.match(/^"([^"]+)"\s*,\s*"([^"]+)"/);
-                    if (matches) {
-                        const payment = matches[1].trim();
-                        const urlLink = matches[2].trim();
-                        if (payment && urlLink.startsWith('http')) {
-                            appState.paymentUrls[payment.toLowerCase()] = urlLink;
-                            console.log(`Loaded: ${payment} -> ${urlLink}`);
-                        }
-                    }
+                if (data.success && Array.isArray(data.payments)) {
+                    data.payments.forEach(item => {
+                        appState.paymentUrls[item.payment] = item.url;
+                    });
+                    console.log('Payment URLs loaded from API:', appState.paymentUrls);
                 }
-                console.log('Payment URLs loaded:', appState.paymentUrls);
             } catch (e) {
                 console.error('Could not load payment URLs:', e);
             }
@@ -1819,7 +1807,10 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadPaymentUrls();
+            init();
+        });
     </script>
 </body>
 </html>
