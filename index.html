@@ -412,6 +412,19 @@
             background: rgba(255, 245, 238, 0.9);
         }
 
+        .site-link-with-icon {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .site-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
         td a {
             color: #0066cc;
             text-decoration: none;
@@ -1070,7 +1083,19 @@
                     url = url.match(/^[a-zA-Z]+:\/\//) ? url : `${DEFAULT_PROTOCOL}${url}`;
                     new URL(url);
                     const domainMatch = url.match(/^(?:https?:\/\/)?(?:www\.)?([^\/]+)/i);
-                    const displayText = shortenSiteName(domainMatch ? domainMatch[1] : url);
+                    const domain = domainMatch ? domainMatch[1] : url;
+                    const displayText = shortenSiteName(domain);
+                    
+                    const container = document.createElement('span');
+                    container.className = 'site-link-with-icon';
+                    
+                    const img = document.createElement('img');
+                    img.src = `https://www.google.com/s2/favicons?sz=32&domain=${domain}`;
+                    img.alt = displayText;
+                    img.className = 'site-icon';
+                    img.onerror = function() { this.style.display = 'none'; };
+                    container.appendChild(img);
+                    
                     const link = document.createElement('a');
                     link.href = url;
                     link.target = '_blank';
@@ -1078,7 +1103,9 @@
                     link.textContent = escapeHTML(displayText);
                     link.setAttribute('aria-label', `Visit ${displayText}`);
                     link.dataset.tooltip = url;
-                    return link;
+                    container.appendChild(link);
+                    
+                    return container;
                 } catch {
                     return document.createTextNode(escapeHTML(text));
                 }
