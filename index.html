@@ -594,6 +594,18 @@
             background: linear-gradient(90deg, #00ff99, #0066cc);
         }
 
+        [data-theme="dark"] h1 {
+            background: linear-gradient(90deg, #00ff99, #00ffcc, #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 153, 0.6));
+        }
+
+        [data-theme="dark"] h1, h3 {
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
         .last-changes-container {
             margin: 10px auto;
             max-width: 600px;
