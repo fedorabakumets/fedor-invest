@@ -7,6 +7,15 @@ This is a **static website** that provides a comprehensive comparison of Russian
 
 **Last Updated:** November 29, 2025
 
+## Столбцы таблицы
+- Название сайта
+- Дата создания
+- Минимальная сумма вывода
+- Сложность регистрации
+- Платежные системы
+- Тип работы
+- Отзывы
+
 ## Project Type
 - **Type:** STATIC HTML/CSS/JavaScript Website (no backend/server-side logic)
 - **Language:** Russian (ru)
