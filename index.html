@@ -129,6 +129,26 @@
             content: "\f0ad";
         }
 
+        .filter-toggle::after {
+            content: "";
+            position: absolute;
+            width: 70%;
+            height: 2px;
+            background: linear-gradient(90deg, #0066cc, #00ff99);
+            bottom: -4px;
+            left: 0;
+            animation: widthPulse 2s infinite;
+        }
+
+        @keyframes widthPulse {
+            0% { width: 70%; }
+            50% { width: 100%; }
+            100% { width: 70%; }
+        }
+
+        [data-theme="dark"] .filter-toggle::after {
+            animation: none;
+        }
 
         .toggle-icon {
             transition: transform 0.3s ease;
