@@ -1,85 +1,108 @@
 # Сравнение сайтов для заработка (Earning Sites Comparison)
 
 ## Overview
-**ВАЖНО: Это СТАТИЧЕСКИЙ сайт.** Все изменения должны сохранять статическую архитектуру без добавления серверной логики.
+**Это СТАТИЧЕСКИЙ САЙТ** с поддержкой динамической загрузки данных и истории изменений.
 
-This is a **static website** that provides a comprehensive comparison of Russian-language earning/click sites with enhanced CSS styling and animations.
+Сайт предоставляет полное сравнение русскоязычных сайтов для заработка с красивым интерфейсом, фильтрацией и историей обновлений.
 
 **Last Updated:** November 29, 2025
 
-## Столбцы таблицы
-- Название сайта
-- Дата создания
-- Минимальная сумма вывода
-- Сложность регистрации
-- Платежные системы
-- Тип работы
-- Отзывы
-
 ## Project Type
-- **Type:** STATIC HTML/CSS/JavaScript Website (no backend/server-side logic)
+- **Type:** STATIC HTML/CSS/JavaScript Website с динамическими данными
 - **Language:** Russian (ru)
-- **Framework:** Vanilla JavaScript (no build tools, no bundlers)
-- **Design:** Enhanced CSS with animations and gradient effects
+- **Framework:** Vanilla JavaScript (no build tools)
+- **Design:** Enhanced CSS с анимациями, градиентами и современным UI
 - **Deployment:** Replit Static Hosting
+
+## Features Implemented
+1. **Таблица сравнения сайтов**
+   - Сортировка по всем колонкам
+   - Фильтрация по платежным системам и типам работы
+   - Постраничная навигация
+   - Переключение между видами (таблица/карточки)
+
+2. **Блок "Последние изменения"**
+   - Показывает последние 5 обновлений
+   - Кнопка "Все изменения" ведёт на отдельную страницу
+   - Автоматическое обновление при загрузке данных
+
+3. **Страница всех изменений (all-changes.html)**
+   - История всех обновлений с датами и временем
+   - Поиск по названию сайта
+   - Сортировка (по дате/названию)
+   - Постраничная загрузка
+   - Автоматическое кэширование (1 день)
+   - Демо-данные при недоступности Google Sheets
+
+4. **Оформление и интерфейс**
+   - Градиентные фоны и кнопки
+   - Анимированные элементы
+   - Темная/светлая тема
+   - Адаптивный дизайн
+   - Управление размером шрифта
+   - Уровни производительности
 
 ## Project Structure
 ```
 .
-├── index.html      # Main HTML file (in site2/)
-├── server.py       # Python HTTP server (port 5000)
-└── site2/
-    └── index.html  # Styled version with inline CSS and animations
+├── index.html           # Основной сайт (порт 5000)
+├── all-changes.html     # Страница истории изменений (порт 5000)
+├── server.py            # Python сервер для index.html
+│
+├── сайт 2/              # Альтернативная версия
+│   ├── index.html       # Основной файл (порт 3000)
+│   ├── all-changes.html # История изменений (порт 3000)
+│   ├── server.py        # Python сервер для порта 3000
+│   ├── data.js          # Модуль данных
+│   ├── logic.js         # Логика приложения
+│   ├── ui.js            # UI модуль
+│   ├── settings.js      # Модуль настроек
+│   ├── base.css
+│   ├── header.css
+│   ├── filters.css
+│   ├── table.css
+│   ├── pagination.css
+│   ├── themes.css
+│   └── animations.css
+│
+└── server2.py           # Python сервер для порта 3000 (альтернатива)
 ```
 
-## Features
-1. **Visual Design**
-   - Animated gradient backgrounds
-   - Glowing effects on headers and tables
-   - Smooth transitions and hover effects
-   - Responsive layout with blur effects
+## Servers Configuration
+- **Site 1 (Port 5000):** Python SimpleHTTPServer - служит `index.html` и `all-changes.html`
+- **Site 2 (Port 3000):** Python SimpleHTTPServer - служит файлы из папки `сайт 2/`
 
-2. **Table Display**
-   - Static data table with 5 key columns
-   - Beautiful styling with blue and cyan gradients
-   - Animated borders and shadows
-   - Sortable headers (visual only)
-
-3. **Data Displayed**
-   - Site name with links
-   - Minimum withdrawal amount
-   - Referral system availability
-   - Payment systems
-   - Work types
-
-## Technical Details
-
-### Server Configuration
-- **Dev Server:** Python SimpleHTTPServer on port 5000
-- **Host:** 0.0.0.0 (accepts all connections)
-- **Cache Control:** Disabled (no-cache headers) to prevent stale content in Replit iframe
-- **Directory:** Serves files from ./site2/
-
-## Development
-
-### Running Locally
-The workflow is already configured. The server runs at http://0.0.0.0:5000/
-
-### Deployment
-This is a static site suitable for deployment to:
-- Replit Static Hosting
-- Any static hosting service (Netlify, Vercel, GitHub Pages, etc.)
+## Data Sources
+- **Main Table:** Google Sheets CSV (автоматическая загрузка)
+- **Changes History:** Google Sheets CSV (с демо-данными как fallback)
+- **Local Storage:** Кэширование данных на 1 день
 
 ## Known Issues
-None at this time.
+- Google Sheets CSV иногда недоступна из-за CORS/редиректов
+  - **Решение:** Автоматическое переключение на демо-данные
 
 ## Architecture Decisions
 
 ### Date: November 29, 2025
-- **Decision:** Use Python SimpleHTTPServer for serving static files
-- **Reason:** Zero dependencies, simpler setup for pure static site, built-in to Python
-- **Cache Control:** Added no-cache headers to prevent Replit iframe caching issues
+- **Decision:** Две версии сайта (port 5000 и 3000)
+- **Reason:** Первая версия - простая, вторая - полнофункциональная с модулями
 
-### Date: November 29, 2025  
-- **Decision:** Single static version with enhanced CSS and animations
-- **Reason:** Focused design approach with visual appeal and performance optimization
+### Date: November 29, 2025
+- **Decision:** Страница all-changes.html с демо-данными
+- **Reason:** Обеспечить работоспособность даже при недоступности Google Sheets
+
+### Date: November 29, 2025
+- **Decision:** LocalStorage для кэширования с TTL (1 день)
+- **Reason:** Ускорить загрузку и снизить нагрузку на Google Sheets
+
+## User Preferences
+- **Language:** Russian (говори на русском)
+- **Type:** STATIC SITE (статический сайт - БЕЗ серверной логики)
+- **Design:** Современный, с градиентами и анимациями
+- **Communication:** Неформальный, понятный
+
+## Deployment
+Сайт готов к развёртыванию:
+- Статический контент - можно развернуть на любом статическом хостинге
+- Нет зависимостей от серверной логики
+- Все данные загружаются с Google Sheets (публичное расшаривание)
