@@ -15,35 +15,27 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Site2 Web Server"
+args = "Main Site (Port 5000)"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Site 2 Server"
+args = "Backup Site (Port 3000)"
 
 [[workflows.workflow]]
-name = "Site2 Web Server"
+name = "Main Site (Port 5000)"
 author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 server.py"
-waitForPort = 5000
 
 [[workflows.workflow]]
-name = "Site 2 Server"
+name = "Backup Site (Port 3000)"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python3 server2.py"
-waitForPort = 3000
-
-[workflows.workflow.metadata]
-outputType = "console"
+args = "cd \"сайт 2\" && python3 server.py"
 
 [[ports]]
 localPort = 3000
