@@ -1536,7 +1536,7 @@
                 const response = await fetch('/api/changes');
                 if (!response.ok) throw new Error('Failed to load changes');
                 const data = await response.json();
-                appState.lastChanges = data.slice(0, 5).reverse().map(item => ({
+                appState.lastChanges = data.slice(-5).reverse().map(item => ({
                     'Дата и время': item.datetime,
                     'Сайт': item.site,
                     'Параметр': item.param,
