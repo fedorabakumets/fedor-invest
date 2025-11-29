@@ -548,6 +548,60 @@
             background: linear-gradient(90deg, #4682b4, #4169e1, #ffcc00);
         }
 
+        .last-changes-container {
+            margin: 10px auto;
+            max-width: 600px;
+        }
+
+        #toggleLastChanges {
+            width: 100%;
+            padding: 8px 15px;
+            background: linear-gradient(90deg, #0066cc, #00ff99);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #toggleLastChanges:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(0, 102, 204, 0.7);
+        }
+
+        .last-changes-content {
+            background: linear-gradient(135deg, #f0f8ff, #e6f0fa);
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #0066cc;
+            margin-top: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+        }
+
+        .last-changes-content.hidden {
+            display: none;
+        }
+
+        #changesList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #changesList li {
+            font-size: 0.9em;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
         @media (max-width: 768px) {
             .filters {
                 flex-direction: column;
@@ -611,6 +665,14 @@
             <h1>Заработок на кликах</h1>
             <p>Ищете лучшие сайты для заработка онлайн? На этой странице вы найдете актуальное сравнение сайтов по минимальной сумме вывода, реферальным системам, сложности регистрации и доступным платежным системам и многим другим данным. Используйте фильтры, чтобы выбрать подходящий вариант, и сортируйте данные по своим предпочтениям. Обновлено в апреле 2025 года.</p>
             <p id="lastUpdated">Последнее обновление: <span id="updateTimestamp">...</span></p>
+            <div id="lastChangesBlock" class="last-changes-container">
+                <button id="toggleLastChanges" aria-label="Скрыть/показать последние изменения">
+                    <i class="fas fa-eye"></i> Последние изменения
+                </button>
+                <div id="lastChangesContent" class="last-changes-content hidden">
+                    <ul id="changesList"></ul>
+                </div>
+            </div>
             <button id="fontSizeIncrease" aria-label="Увеличить шрифт">+</button>
             <button id="fontSizeDecrease" aria-label="Уменьшить шрифт">-</button>
         </div>
@@ -1028,6 +1090,18 @@
             document.getElementById('themeToggleMobile').textContent = theme === 'light' ? '🌙' : '☀';
         }
 
+        function toggleLastChanges() {
+            const content = document.getElementById('lastChangesContent');
+            if (content) {
+                content.classList.toggle('hidden');
+                const toggleBtn = document.getElementById('toggleLastChanges');
+                const icon = toggleBtn?.querySelector('i');
+                if (icon) {
+                    icon.className = content.classList.contains('hidden') ? 'fas fa-eye-slash' : 'fas fa-eye';
+                }
+            }
+        }
+
         function adjustFontSize(delta) {
             appState.fontSize = Math.max(0.8, Math.min(1.5, appState.fontSize + delta));
             document.documentElement.style.fontSize = `${appState.fontSize}rem`;
@@ -1076,6 +1150,7 @@
                     renderTable();
                 });
 
+                document.getElementById('toggleLastChanges')?.addEventListener('click', toggleLastChanges);
                 document.getElementById('themeSwitch').addEventListener('change', e => setTheme(e.target.value));
                 document.getElementById('fontSizeIncrease').addEventListener('click', () => adjustFontSize(0.1));
                 document.getElementById('fontSizeDecrease').addEventListener('click', () => adjustFontSize(-0.1));
