@@ -17,6 +17,10 @@ author = "agent"
 task = "workflow.run"
 args = "Web Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Site2 Web Server"
+
 [[workflows.workflow]]
 name = "Web Server"
 author = "agent"
@@ -29,12 +33,28 @@ waitForPort = 5000
 [workflows.workflow.metadata]
 outputType = "webview"
 
+[[workflows.workflow]]
+name = "Site2 Web Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 server2.py"
+waitForPort = 3000
+
+[workflows.workflow.metadata]
+outputType = "console"
+
 [[ports]]
 localPort = 5000
 externalPort = 80
 
 [[ports]]
 localPort = 35685
+externalPort = 3000
+
+[[ports]]
+localPort = 3000
 externalPort = 3000
 
 [deployment]
