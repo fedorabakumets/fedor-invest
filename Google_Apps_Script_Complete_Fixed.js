@@ -166,8 +166,14 @@ function getPaymentData() {
                 const richText = cell.getRichTextValue();
                 if (richText) {
                     const text = richText.getText();
-                    const linkUrl = richText.getLinkUrl(0, text.length);
-                    url = linkUrl || '';
+                    if (text && text.length > 0) {
+                        try {
+                            const linkUrl = richText.getLinkUrl(0);
+                            url = linkUrl || '';
+                        } catch (linkErr) {
+                            console.log(`getPaymentData: Не удалось получить URL из Rich Text`);
+                        }
+                    }
                 }
             }
         } catch (e) {
@@ -296,8 +302,14 @@ function createPaymentHyperlinksFormula(cell, paymentText) {
                     const richText = paymentCell.getRichTextValue();
                     if (richText) {
                         const text = richText.getText();
-                        const link = richText.getLinkUrl(0, text.length);
-                        url = link || '';
+                        if (text && text.length > 0) {
+                            try {
+                                const link = richText.getLinkUrl(0);
+                                url = link || '';
+                            } catch (linkErr) {
+                                console.log(`createPaymentHyperlinksFormula: Не удалось получить URL из Rich Text`);
+                            }
+                        }
                     }
                 }
             } catch (e) {
