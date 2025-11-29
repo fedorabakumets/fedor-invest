@@ -266,11 +266,11 @@
 
                 // Преобразование формата данных с API в формат для отображения
                 const formattedData = data.map(item => ({
-                    'Дата и время': item.date,
+                    'Дата и время': item.datetime,
                     'Сайт': item.site,
-                    'Ячейка': item.change,
-                    'Старое значение': item.old,
-                    'Новое значение': item.new
+                    'Параметр': item.param,
+                    'Было': item.old,
+                    'Стало': item.new
                 }));
 
                 localStorage.setItem(cacheKey, JSON.stringify(formattedData));
@@ -329,27 +329,33 @@
             return match ? match[1] : site;
         }
 
-        function getCellContext(cell, site) {
-            const col = cell.charAt(0);
-            switch (col) {
-                case 'F': return { text: `список поддерживаемых платёжных систем`, gender: 'male' };
-                case 'A': return { text: `сайт был добавлен в список`, gender: 'male' };
-                case 'B': return { text: `год создания сайта`, gender: 'male' };
-                case 'C': return { text: `минимальная сумма вывода`, gender: 'female' };
-                case 'D': return { text: `реферальная система`, gender: 'female' };
-                case 'E': return { text: `сложность регистрации`, gender: 'female' };
-                default: return { text: `другое значение`, gender: 'neuter' };
+        function getParamContext(param) {
+            const paramLower = (param || '').toLowerCase();
+            if (paramLower.includes('сложность')) {
+                return { text: `сложность регистрации`, gender: 'female' };
+            } else if (paramLower.includes('минимальная') || paramLower.includes('вывод')) {
+                return { text: `минимальная сумма вывода`, gender: 'female' };
+            } else if (paramLower.includes('реферал')) {
+                return { text: `реферальная система`, gender: 'female' };
+            } else if (paramLower.includes('год')) {
+                return { text: `год создания сайта`, gender: 'male' };
+            } else if (paramLower.includes('платёж') || paramLower.includes('платеж')) {
+                return { text: `список поддерживаемых платёжных систем`, gender: 'male' };
+            } else if (param) {
+                return { text: param.toLowerCase(), gender: 'neuter' };
+            } else {
+                return { text: `параметр`, gender: 'male' };
             }
         }
 
         function createChangeSentence(change) {
-            const timestamp = fixRussianText(change['Дата и время']) || 'дата неизвестна';
-            const cell = change['Ячейка'] || 'не указана';
-            const oldValueText = fixRussianText(change['Старое значение']) || '';
-            const newValueText = fixRussianText(change['Новое значение']) || '';
+            const timestamp = change['Дата и время'] || 'дата неизвестна';
+            const param = change['Параметр'] || '';
+            const oldValueText = change['Было'] || '';
+            const newValueText = change['Стало'] || '';
             const site = change['Сайт'] || '';
             const displaySite = shortenSiteName(site);
-            const contextObj = getCellContext(cell, site);
+            const contextObj = getParamContext(param);
             const context = contextObj.text;
             const gender = contextObj.gender;
 
@@ -530,8 +536,12 @@
             displayChanges(filteredChanges, currentPage);
         });
 
-        // Обновление данных
-        document.getElementById('refresh-btn').addEventListener('click', loadChanges);
+        // Обновление данных (с очисткой кэша)
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            localStorage.removeItem('changesData');
+            localStorage.removeItem('changesDataTimestamp');
+            loadChanges();
+        });
 
         // Загрузка дополнительных изменений
         document.getElementById('load-more-btn').addEventListener('click', () => {

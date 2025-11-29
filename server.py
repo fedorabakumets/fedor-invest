@@ -32,11 +32,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             for row in reader:
                 if row.get('Дата и время') and row.get('Сайт'):
                     changes.append({
-                        'date': row.get('Дата и время', '')[:10],
+                        'datetime': row.get('Дата и время', ''),
                         'site': row.get('Сайт', ''),
-                        'change': row.get('Ячейка', ''),
-                        'old': row.get('Старое значение', ''),
-                        'new': row.get('Новое значение', '')
+                        'param': row.get('Параметр', ''),
+                        'old': row.get('Было', ''),
+                        'new': row.get('Стало', '')
                     })
             
             self.send_response(200)
