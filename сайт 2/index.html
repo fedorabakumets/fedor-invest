@@ -1050,7 +1050,7 @@
             }
             if (selectedWork.length > 0) {
                 filteredData = filteredData.filter(row => {
-                    const work = row.split('\n').map(item => item.trim());
+                    const work = (row[COLUMN_KEYS[5]] || '').split('\n').map(item => item.trim()).filter(Boolean);
                     return selectedWork.some(w => work.includes(w));
                 });
             }
