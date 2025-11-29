@@ -55,6 +55,18 @@
             { date: '2025-11-22', site: 'climbpay', change: 'сложность регистрации', old: 'Сложная', new: 'Средняя' },
         ];
 
+        async function loadGoogleSheets() {
+            try {
+                const response = await fetch('/api/changes');
+                if (!response.ok) throw new Error('Ошибка загрузки');
+                const data = await response.json();
+                return data.length > 0 ? data : DEMO_DATA;
+            } catch (e) {
+                console.log('Google Sheets недоступна, используем демо:', e.message);
+                return DEMO_DATA;
+            }
+        }
+
         let allChanges = DEMO_DATA;
         let filteredChanges = DEMO_DATA;
         let currentPage = 1;
@@ -121,7 +133,11 @@
         document.getElementById('search').addEventListener('input', filter);
         document.getElementById('sort').addEventListener('change', filter);
 
-        filter();
+        (async () => {
+            allChanges = await loadGoogleSheets();
+            filteredChanges = allChanges;
+            filter();
+        })();
     </script>
 </body>
 </html>
