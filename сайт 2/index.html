@@ -876,10 +876,8 @@
                 [COLUMN_KEYS[1]]: normalizeText(row[1] || ''),
                 [COLUMN_KEYS[2]]: normalizeText(row[2] || ''),
                 [COLUMN_KEYS[3]]: normalizeText(row[3] || ''),
-                [COLUMN_KEYS[4]]: normalizeText(row[4] || ''),
-                [COLUMN_KEYS[5]]: row[5] ? row[5].split(/,\s*/).map(normalizeText).join('\n') : '',
-                [COLUMN_KEYS[6]]: row[6] ? row[6].split(/,\s*/).map(normalizeText).join('\n') : '',
-                [COLUMN_KEYS[7]]: row[8] || ''
+                [COLUMN_KEYS[4]]: row[4] ? row[4].split(/,\s*/).map(normalizeText).join('\n') : '',
+                [COLUMN_KEYS[5]]: row[5] ? row[5].split(/,\s*/).map(normalizeText).join('\n') : ''
             })).filter(row => row[COLUMN_KEYS[0]]);
         }
 
@@ -889,8 +887,8 @@
             );
             if (rows.length < 2) return { payments: [], work: [] };
             return {
-                payments: [...new Set(rows.slice(1).map(row => normalizeText(row[1])).filter(Boolean))].sort(),
-                work: [...new Set(rows.slice(1).map(row => normalizeText(row[2])).filter(Boolean))].sort()
+                payments: [...new Set(rows.slice(1).map(row => normalizeText(row[4])).filter(Boolean))].sort(),
+                work: [...new Set(rows.slice(1).map(row => normalizeText(row[5])).filter(Boolean))].sort()
             };
         }
 
@@ -906,15 +904,9 @@
             const paginatedData = appState.tableData.slice(start, end);
             paginatedData.forEach(row => {
                 const tr = document.createElement('tr');
-                for (let i = 0; i < COLUMN_KEYS.length - 1; i++) {
+                for (let i = 0; i < COLUMN_KEYS.length; i++) {
                     tr.appendChild(createTableCell(row[COLUMN_KEYS[i]], i === 0 ? createLinkElement : undefined));
                 }
-                const reviews = row[COLUMN_KEYS[7]];
-                const lastUpdate = appState.latestUpdateFromH
-                    ? appState.latestUpdateFromH.toLocaleString(appState.locale, { dateStyle: 'short' })
-                    : 'Неизвестно';
-                const displayText = reviews ? `${reviews}\nПоследнее обновление: ${lastUpdate}` : `Последнее обновление: ${lastUpdate}`;
-                tr.appendChild(createTableCell(displayText, createLinkElement));
                 tbody.appendChild(tr);
             });
             animateRows(tbody);
@@ -961,18 +953,14 @@
             appState.tableData.sort((a, b) => {
                 let aValue = a[COLUMN_KEYS[columnIndex]] || '';
                 let bValue = b[COLUMN_KEYS[columnIndex]] || '';
-                if (columnIndex === 7) {
-                    aValue = aValue.split('\n')[0];
-                    bValue = bValue.split('\n')[0];
-                }
-                if ([0, 3, 7].includes(columnIndex)) return appState.sort.direction * aValue.localeCompare(bValue);
+                if ([0, 3].includes(columnIndex)) return appState.sort.direction * aValue.localeCompare(bValue);
                 if (columnIndex === 1) {
                     const aTime = Date.parse(aValue) || 0;
                     const bTime = Date.parse(bValue) || 0;
                     return appState.sort.direction * (aTime - bTime);
                 }
                 if (columnIndex === 2) return appState.sort.direction * (parseFloat(aValue) || 0 - parseFloat(bValue) || 0);
-                if (columnIndex === 4) return appState.sort.direction * ((DIFFICULTY_ORDER[aValue] || 0) - (DIFFICULTY_ORDER[bValue] || 0));
+                if (columnIndex === 3) return appState.sort.direction * ((DIFFICULTY_ORDER[aValue] || 0) - (DIFFICULTY_ORDER[bValue] || 0));
                 return appState.sort.direction * (aValue.split('\n').length - bValue.split('\n').length);
             });
             updateArrow(columnIndex);
@@ -1046,13 +1034,13 @@
             let filteredData = [...appState.originalTableData];
             if (selectedPayments.length > 0) {
                 filteredData = filteredData.filter(row => {
-                    const payments = row[COLUMN_KEYS[5]].split('\n').map(item => item.trim());
+                    const payments = row[COLUMN_KEYS[4]].split('\n').map(item => item.trim());
                     return selectedPayments.some(p => payments.includes(p));
                 });
             }
             if (selectedWork.length > 0) {
                 filteredData = filteredData.filter(row => {
-                    const work = row[COLUMN_KEYS[6]].split('\n').map(item => item.trim());
+                    const work = row[COLUMN_KEYS[5]].split('\n').map(item => item.trim());
                     return selectedWork.some(w => work.includes(w));
                 });
             }
