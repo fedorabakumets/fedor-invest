@@ -1112,6 +1112,24 @@
             document.getElementById('themeToggleMobile').textContent = theme === 'light' ? '🌙' : '☀';
         }
 
+        function updateLastChanges() {
+            const changesList = document.getElementById('changesList');
+            if (!changesList || !appState.lastChanges) return;
+            changesList.innerHTML = '';
+            const recentChanges = Array.isArray(appState.lastChanges) 
+                ? appState.lastChanges.slice(0, 5) 
+                : [];
+            recentChanges.forEach(change => {
+                const li = document.createElement('li');
+                const date = new Date(change.date);
+                const formattedDate = isNaN(date.getTime()) 
+                    ? 'Invalid Date' 
+                    : date.toLocaleDateString('ru-RU');
+                li.innerHTML = `Сайт <a href="${change.url || '#'}" target="_blank">${escapeHTML(change.name)}</a> обновлен ${formattedDate}`;
+                changesList.appendChild(li);
+            });
+        }
+
         function toggleLastChanges() {
             const content = document.getElementById('lastChangesContent');
             if (content) {
@@ -1122,6 +1140,12 @@
                     icon.className = content.classList.contains('hidden') ? 'fas fa-eye-slash' : 'fas fa-eye';
                 }
             }
+        }
+
+        function escapeHTML(text) {
+            const tempDiv = document.createElement('div');
+            tempDiv.textContent = text ?? '';
+            return tempDiv.innerHTML;
         }
 
         function adjustFontSize(delta) {
@@ -1151,8 +1175,14 @@
                 appState.originalTableData = parseCSV(tableCsv);
                 appState.tableData = [...appState.originalTableData];
                 const filterData = parseFilterCSV(filterCsv);
+                appState.lastChanges = appState.originalTableData.slice(0, 5).map(row => ({
+                    name: row[COLUMN_KEYS[0]],
+                    url: row[COLUMN_KEYS[0]],
+                    date: new Date().toISOString()
+                }));
                 renderTable();
                 renderFilters(filterData);
+                updateLastChanges();
                 setTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
                 appState.fontSize = parseFloat(localStorage.getItem('fontSize')) || 1;
                 document.documentElement.style.fontSize = `${appState.fontSize}rem`;
