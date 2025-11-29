@@ -3,526 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Последние изменения в таблице сайтов: минимальная сумма вывода, реферальная система, год создания и другие параметры.">
-    <meta name="keywords" content="изменения сайтов, минимальная сумма вывода, реферальная система, список изменений">
-    <title>Последние изменения сайтов: минимальная сумма вывода, реферальная система и другие параметры</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <title>Последние изменения</title>
     <style>
-        body {
-            font-family: 'Segoe UI', system-ui, Arial, sans-serif;
-            margin: 20px auto;
-            padding: 0 10px;
-            background-color: #f5f5f5;
-            color: #1a1a1a;
-        }
-        h1 {
-            color: #1a1a1a;
-            text-align: center;
-            font-weight: bold;
-        }
-        #filter-container {
-            margin: 15px 0;
-            text-align: center;
-            position: relative;
-        }
-        #filter {
-            padding: 8px;
-            width: 100%;
-            max-width: 300px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #filter-clear {
-            position: absolute;
-            right: calc(50% - 140px);
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            color: #666;
-            display: none;
-        }
-        #filter-clear:hover {
-            color: #e74c3c;
-        }
-        #sort-container {
-            margin: 10px 0;
-            text-align: center;
-        }
-        #sort {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #changes-container {
-            position: relative;
-        }
-        .change-item {
-            margin: 15px 0;
-            padding: 12px;
-            border-radius: 8px;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .change-item.added {
-            border-left: 4px solid #27ae60;
-        }
-        .site-name {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        .old-value {
-            color: #5a6268; /* Увеличена контрастность */
-            font-style: italic;
-        }
-        .new-value {
-            color: #27ae60;
-            font-weight: bold;
-        }
-        a {
-            color: #1a73e8;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        #refresh-btn {
-            display: block;
-            margin: 15px auto;
-            padding: 8px 20px;
-            background: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        #refresh-btn:disabled {
-            background: #a0c1f5;
-            cursor: not-allowed;
-        }
-        #refresh-btn:hover:not(:disabled) {
-            background: #1557b0;
-        }
-        #load-more-btn {
-            display: block;
-            margin: 15px auto;
-            padding: 8px 20px;
-            background: #666;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        #load-more-btn:hover {
-            background: #555;
-        }
-        #load-more-btn:disabled {
-            background: #999;
-            cursor: not-allowed;
-        }
-        #loading {
-            display: none;
-            text-align: center;
-            color: #666;
-            margin: 20px 0;
-        }
-        #loading::after {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #1a73e8;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            vertical-align: middle;
-            margin-left: 10px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .change-item {
-                transition: none;
-            }
-            #loading::after {
-                animation: none;
-            }
-        }
-        @media (max-width: 600px) {
-            body { max-width: 100%; padding: 0 5px; }
-            h1 { font-size: 16px; }
-            .change-item { font-size: 12px; padding: 8px; }
-            #refresh-btn, #load-more-btn { padding: 6px 15px; font-size: 14px; }
-            #loading { font-size: 14px; }
-            #filter-clear { right: calc(50% - 130px); }
-        }
-        @media (min-width: 601px) and (max-width: 900px) {
-            body { max-width: 80%; padding: 0 15px; }
-            h1 { font-size: 18px; }
-            .change-item { font-size: 13px; padding: 9px; }
-            #refresh-btn, #load-more-btn { padding: 7px 18px; font-size: 15px; }
-            #loading { font-size: 15px; }
-            #filter-clear { right: calc(50% - 135px); }
-        }
-        @media (min-width: 901px) {
-            body { max-width: 400px; padding: 0 10px; }
-            h1 { font-size: 20px; }
-            .change-item { font-size: 14px; padding: 10px; }
-            #refresh-btn, #load-more-btn { padding: 8px 20px; font-size: 16px; }
-            #loading { font-size: 16px; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 30px; color: #0066cc; }
+        .controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        input, select { padding: 8px 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+        input { flex: 1; min-width: 200px; }
+        button { padding: 8px 16px; background: #0066cc; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0052a3; }
+        .changes-list { display: flex; flex-direction: column; gap: 12px; }
+        .change-item { background: white; padding: 12px; border-radius: 5px; border-left: 4px solid #0066cc; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .change-item.added { border-left-color: #27ae60; }
+        .site-name { font-weight: bold; color: #0066cc; }
+        .date { color: #666; font-size: 12px; }
+        .load-more { display: block; margin: 20px auto; padding: 10px 20px; }
+        .empty { text-align: center; color: #999; padding: 40px 20px; }
+        .loading { text-align: center; color: #0066cc; padding: 20px; }
     </style>
 </head>
 <body>
-    <h1>Последние изменения в таблице сайтов</h1>
-    <div id="filter-container">
-        <input type="text" id="filter" placeholder="Поиск по названию сайта">
-        <button id="filter-clear" title="Очистить фильтр">✖</button>
+    <div class="container">
+        <h1>Последние изменения</h1>
+        
+        <div class="controls">
+            <input type="text" id="search" placeholder="Поиск по названию сайта">
+            <select id="sort">
+                <option value="new">Новые первыми</option>
+                <option value="old">Старые первыми</option>
+                <option value="name">По названию (А-Я)</option>
+            </select>
+            <button onclick="location.reload()">Обновить</button>
+        </div>
+
+        <div id="changes" class="changes-list"></div>
+        <button id="loadMore" class="load-more" onclick="loadMore()" style="display:none">Загрузить ещё</button>
     </div>
-    <div id="sort-container">
-        <select id="sort">
-            <option value="date-desc">По дате (сначала новые)</option>
-            <option value="date-asc">По дате (сначала старые)</option>
-            <option value="site-asc">По сайту (А–Я)</option>
-            <option value="site-desc">По сайту (Я–А)</option>
-        </select>
-    </div>
-    <button id="refresh-btn">Обновить данные</button>
-    <div id="loading">Загрузка...</div>
-    <div id="changes-container" role="main"></div>
-    <button id="load-more-btn" style="display: none;">Загрузить еще</button>
 
     <script>
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGnixVAvnj2eKui4co3sdcSCLSXJDIUIGW9GblUhrUJLzIyDRQWyZISHnuNnCMAXTkV2wJfXmao0qP/pub?gid=1531258534&single=true&output=csv';
-        const ITEMS_PER_PAGE = 10;
         let allChanges = [];
-        let currentPage = 1;
         let filteredChanges = [];
+        let currentPage = 1;
+        const itemsPerPage = 5;
 
-        // Проверка и очистка устаревших данных в localStorage (старше 1 дня)
-        function cleanLocalStorage() {
-            const cacheKey = 'changesData';
-            const cacheTimestampKey = 'changesDataTimestamp';
-            const oneDayInMs = 24 * 60 * 60 * 1000;
-            const cachedTimestamp = localStorage.getItem(cacheTimestampKey);
+        const DEMO = [
+            { date: '2025-11-29', site: 'unknown сайт', change: 'сайт был добавлен', old: '', new: 'https://unknown.ru' },
+            { date: '2025-11-28', site: 'neobux', change: 'минимальная сумма вывода', old: '0.01', new: '0.02' },
+            { date: '2025-11-27', site: 'clixsense', change: 'сложность регистрации', old: 'Средняя', new: 'Легкая' },
+            { date: '2025-11-26', site: 'prizerebel', change: 'платежные системы', old: 'PayPal', new: 'PayPal, Amazon' },
+            { date: '2025-11-25', site: 'swagbucks', change: 'год создания', old: '2009', new: '2010' }
+        ];
 
-            if (cachedTimestamp && (Date.now() - parseInt(cachedTimestamp) > oneDayInMs)) {
-                localStorage.removeItem(cacheKey);
-                localStorage.removeItem(cacheTimestampKey);
-            }
+        function escape(t) {
+            const m = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'};
+            return t.replace(/[&<>"']/g, c => m[c]);
         }
 
-        async function fetchAndParseCSV() {
-            try {
-                cleanLocalStorage();
-                const cacheKey = 'changesData';
-                const cacheTimestampKey = 'changesDataTimestamp';
-                const cachedData = localStorage.getItem(cacheKey);
-
-                if (cachedData) {
-                    return JSON.parse(cachedData);
-                }
-
-                let response;
-                try {
-                    response = await fetch(csvUrl);
-                } catch (error) {
-                    throw new Error('Не удалось загрузить данные. Проверьте подключение к интернету и попробуйте снова.');
-                }
-
-                if (!response.ok) {
-                    throw new Error('Не удалось загрузить данные. Убедитесь, что у вас есть доступ к таблице, и попробуйте снова.');
-                }
-
-                const arrayBuffer = await response.arrayBuffer();
-                const decoder = new TextDecoder('utf-8');
-                const text = decoder.decode(arrayBuffer);
-
-                if (typeof Papa === 'undefined') {
-                    throw new Error('Библиотека PapaParse недоступна. Пожалуйста, проверьте подключение к интернету или обновите страницу.');
-                }
-
-                const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-                if (!parsed.data || parsed.data.length === 0) {
-                    throw new Error('Данные не найдены. Возможно, таблица пуста или произошла ошибка при загрузке.');
-                }
-
-                const data = parsed.data
-                    .filter(row => row['Дата и время'] && row['Ячейка'] && row['Сайт'])
-                    .sort((a, b) => new Date(b['Дата и время']) - new Date(a['Дата и время']));
-
-                localStorage.setItem(cacheKey, JSON.stringify(data));
-                localStorage.setItem(cacheTimestampKey, Date.now().toString());
-                return data;
-            } catch (error) {
-                throw error;
+        function render() {
+            const c = document.getElementById('changes');
+            c.innerHTML = '';
+            if (!filteredChanges.length) {
+                c.innerHTML = '<div class="empty">Нет изменений</div>';
+                document.getElementById('loadMore').style.display = 'none';
+                return;
             }
-        }
-
-        function escapeHTML(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function fixRussianText(text) {
-            if (!text || text.trim() === '') return text;
-            text = text.trim();
-
-            if (/^\d+$/.test(text)) {
-                return text;
-            }
-
-            const date = new Date(text);
-            if (!isNaN(date)) {
-                return date.toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'medium' });
-            }
-            if (text.match(/^http/i) || text.match(/\.[a-zA-Z]{2,}$/i)) return text;
-            text = text.replace(/\s+/g, ' ');
-            return text.charAt(0).toUpperCase() + text.slice(1);
-        }
-
-        function createLinkElement(text) {
-            if (!text || text.trim() === '') return document.createTextNode('');
-            const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)/gi;
-            const match = text.match(urlPattern);
-            if (match) {
-                let url = match[0];
-                if (!url.match(/^https?:\/\//)) url = 'https://' + url;
-                const domainMatch = url.match(/^(?:https?:\/\/)?(?:www\.)?([^\/]+)/i);
-                const displayText = domainMatch ? domainMatch[1] : url;
-                const a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer nofollow';
-                a.textContent = escapeHTML(displayText);
-                return a;
-            }
-            return document.createTextNode(escapeHTML(text));
-        }
-
-        function shortenSiteName(site) {
-            if (!site) return '';
-            const match = site.match(/^(.+?)(?:\.[a-zA-Z]{2,})+$/);
-            return match ? match[1] : site;
-        }
-
-        function getCellContext(cell, site) {
-            const col = cell.charAt(0);
-            switch (col) {
-                case 'F': return { text: `список поддерживаемых платёжных систем`, gender: 'male' };
-                case 'A': return { text: `сайт был добавлен в список`, gender: 'male' };
-                case 'B': return { text: `год создания сайта`, gender: 'male' };
-                case 'C': return { text: `минимальная сумма вывода`, gender: 'female' };
-                case 'D': return { text: `реферальная система`, gender: 'female' };
-                case 'E': return { text: `сложность регистрации`, gender: 'female' };
-                default: return { text: `другое значение`, gender: 'neuter' };
-            }
-        }
-
-        function createChangeSentence(change) {
-            const timestamp = fixRussianText(change['Дата и время']) || 'дата неизвестна';
-            const cell = change['Ячейка'] || 'не указана';
-            const oldValueText = fixRussianText(change['Старое значение']) || '';
-            const newValueText = fixRussianText(change['Новое значение']) || '';
-            const site = change['Сайт'] || '';
-            const displaySite = shortenSiteName(site);
-            const contextObj = getCellContext(cell, site);
-            const context = contextObj.text;
-            const gender = contextObj.gender;
-
-            const div = document.createElement('div');
-            div.className = `change-item ${context.includes('сайт был добавлен') ? 'added' : ''}`;
-            div.dataset.site = site;
-            div.dataset.timestamp = change['Дата и время'];
-
-            const sentenceStart = document.createTextNode(`На сайте `);
-            div.appendChild(sentenceStart);
-
-            const siteSpan = document.createElement('span');
-            siteSpan.className = 'site-name';
-            siteSpan.appendChild(createLinkElement(site));
-            div.appendChild(siteSpan);
-
-            let updatedVerb = '';
-            if (!context.includes('сайт был добавлен')) {
-                if (gender === 'male') {
-                    updatedVerb = ' обновлён';
-                } else if (gender === 'female') {
-                    updatedVerb = ' обновлена';
-                } else {
-                    updatedVerb = ' обновлено';
-                }
-            }
-
-            const sentenceMiddle = document.createTextNode(` ${context}${updatedVerb} `);
-            div.appendChild(sentenceMiddle);
-
-            if (oldValueText) {
-                div.appendChild(document.createTextNode('с '));
-                const oldValueSpan = document.createElement('span');
-                oldValueSpan.className = 'old-value';
-                oldValueSpan.appendChild(createLinkElement(oldValueText));
-                div.appendChild(oldValueSpan);
-            }
-
-            if (oldValueText || newValueText) {
-                const arrowSpan = document.createElement('span');
-                arrowSpan.textContent = ' на ';
-                div.appendChild(arrowSpan);
-            }
-
-            if (newValueText) {
-                const newValueSpan = document.createElement('span');
-                newValueSpan.className = 'new-value';
-                newValueSpan.appendChild(createLinkElement(newValueText));
-                div.appendChild(newValueSpan);
-            }
-
-            div.appendChild(document.createTextNode(` в ${timestamp}.`));
-            return div;
-        }
-
-        function applySort(changes) {
-            const sortValue = document.getElementById('sort').value;
-            localStorage.setItem('sortPreference', sortValue);
-
-            let sortedChanges = [...changes];
-            switch (sortValue) {
-                case 'date-desc':
-                    sortedChanges.sort((a, b) => new Date(b['Дата и время']) - new Date(a['Дата и время']));
-                    break;
-                case 'date-asc':
-                    sortedChanges.sort((a, b) => new Date(a['Дата и время']) - new Date(b['Дата и время']));
-                    break;
-                case 'site-asc':
-                    sortedChanges.sort((a, b) => a['Сайт'].localeCompare(b['Сайт'], 'ru'));
-                    break;
-                case 'site-desc':
-                    sortedChanges.sort((a, b) => b['Сайт'].localeCompare(a['Сайт'], 'ru'));
-                    break;
-            }
-            return sortedChanges;
-        }
-
-        function displayChanges(changes, page = 1, append = false) {
-            const container = document.getElementById('changes-container');
-            const loadMoreBtn = document.getElementById('load-more-btn');
-
-            if (!append) {
-                container.innerHTML = '';
-            }
-
-            const start = (page - 1) * ITEMS_PER_PAGE;
-            const end = start + ITEMS_PER_PAGE;
-            const changesToDisplay = changes.slice(start, end);
-
-            const fragment = document.createDocumentFragment();
-            changesToDisplay.forEach(change => {
-                const changeElement = createChangeSentence(change);
-                fragment.appendChild(changeElement);
+            const s = (currentPage-1) * itemsPerPage;
+            const e = s + itemsPerPage;
+            const show = filteredChanges.slice(s, e);
+            show.forEach(ch => {
+                const d = document.createElement('div');
+                d.className = 'change-item' + (ch.change.includes('добавлен') ? ' added' : '');
+                let h = `На сайте <span class="site-name">${escape(ch.site)}</span> ${escape(ch.change)} `;
+                if (ch.old) h += `с <span style="color:#999">${escape(ch.old)}</span> `;
+                if (ch.old || ch.new) h += `на `;
+                if (ch.new) h += `<span style="color:#27ae60;font-weight:bold">${escape(ch.new)}</span> `;
+                h += `<div class="date">${ch.date}</div>`;
+                d.innerHTML = h;
+                c.appendChild(d);
             });
-            container.appendChild(fragment);
-
-            if (end < changes.length) {
-                loadMoreBtn.style.display = 'block';
-                loadMoreBtn.disabled = false;
-            } else {
-                loadMoreBtn.style.display = 'none';
-            }
+            document.getElementById('loadMore').style.display = e < filteredChanges.length ? 'block' : 'none';
         }
 
-        async function loadChanges() {
-            const container = document.getElementById('changes-container');
-            const loading = document.getElementById('loading');
-            const refreshBtn = document.getElementById('refresh-btn');
-            const loadMoreBtn = document.getElementById('load-more-btn');
+        function filter() {
+            const q = document.getElementById('search').value.toLowerCase();
+            const s = document.getElementById('sort').value;
+            filteredChanges = allChanges.filter(x => x.site.toLowerCase().includes(q));
+            if (s === 'new') filteredChanges.sort((a,b) => new Date(b.date) - new Date(a.date));
+            else if (s === 'old') filteredChanges.sort((a,b) => new Date(a.date) - new Date(b.date));
+            else if (s === 'name') filteredChanges.sort((a,b) => a.site.localeCompare(b.site, 'ru'));
+            currentPage = 1;
+            render();
+        }
 
-            container.innerHTML = '';
-            loading.style.display = 'block';
-            refreshBtn.disabled = true;
-            loadMoreBtn.disabled = true;
-
+        async function load() {
+            document.getElementById('changes').innerHTML = '<div class="loading">Загрузка...</div>';
             try {
-                allChanges = await fetchAndParseCSV();
-                loading.style.display = 'none';
-
-                if (allChanges.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #666;">К сожалению, данные сейчас недоступны. Пожалуйста, попробуйте обновить страницу позже.</p>';
-                    return;
-                }
-
-                filteredChanges = [...allChanges];
-                filteredChanges = applySort(filteredChanges);
-                currentPage = 1;
-                displayChanges(filteredChanges, currentPage);
-            } catch (error) {
-                loading.style.display = 'none';
-                container.innerHTML = `<p style="text-align: center; color: #e74c3c;">Ошибка: ${error.message}</p>`;
-            } finally {
-                refreshBtn.disabled = false;
-                loadMoreBtn.disabled = false;
+                const r = await fetch('/api/changes', {cache: 'no-store'});
+                const d = await r.json();
+                allChanges = (d && d.length) ? d : DEMO;
+            } catch(e) {
+                console.log('Используем демо-данные:', e);
+                allChanges = DEMO;
             }
+            filter();
         }
 
-        // Инициализация сортировки
-        function initSort() {
-            const sortSelect = document.getElementById('sort');
-            const savedSort = localStorage.getItem('sortPreference');
-            if (savedSort) {
-                sortSelect.value = savedSort;
-            }
-        }
-
-        // Фильтрация
-        document.getElementById('filter').addEventListener('input', (e) => {
-            const filter = e.target.value.toLowerCase();
-            const filterClear = document.getElementById('filter-clear');
-            filterClear.style.display = filter ? 'block' : 'none';
-
-            filteredChanges = allChanges.filter(change => 
-                change['Сайт'].toLowerCase().includes(filter)
-            );
-            filteredChanges = applySort(filteredChanges);
-            currentPage = 1;
-            displayChanges(filteredChanges, currentPage);
-        });
-
-        // Очистка фильтра
-        document.getElementById('filter-clear').addEventListener('click', () => {
-            const filterInput = document.getElementById('filter');
-            filterInput.value = '';
-            filterInput.dispatchEvent(new Event('input'));
-        });
-
-        // Сортировка
-        document.getElementById('sort').addEventListener('change', () => {
-            filteredChanges = applySort(filteredChanges);
-            currentPage = 1;
-            displayChanges(filteredChanges, currentPage);
-        });
-
-        // Обновление данных
-        document.getElementById('refresh-btn').addEventListener('click', loadChanges);
-
-        // Загрузка дополнительных изменений
-        document.getElementById('load-more-btn').addEventListener('click', () => {
+        function loadMore() {
             currentPage++;
-            displayChanges(filteredChanges, currentPage, true);
-        });
+            render();
+        }
 
-        // Инициализация
-        window.onload = () => {
-            initSort();
-            loadChanges();
-        };
+        document.getElementById('search').addEventListener('input', filter);
+        document.getElementById('sort').addEventListener('change', filter);
+        load();
     </script>
 </body>
 </html>
