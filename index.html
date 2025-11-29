@@ -1016,7 +1016,7 @@
         }
 
         function shortenSiteName(site) {
-            const match = site?.match(/^(?:.*\.)?([^.]+)\.[a-zA-Z]{2,}(?:\/|$)/);
+            const match = site?.match(/^(?:.*\.)?([^.]+\.[a-zA-Z]{2,})(?:\/|$)/);
             const name = match ? match[1] : site || '';
             return name.charAt(0).toUpperCase() + name.slice(1);
         }
