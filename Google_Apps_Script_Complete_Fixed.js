@@ -69,10 +69,6 @@ function checkPaymentHyperlinks(e) {
     }
 }
 
-function onEdit(e) {
-    // Проверка гиперссылок платежных систем
-    checkPaymentHyperlinks(e);
-}
 
 function doGet(e) {
     const params = e && e.parameter ? e.parameter : {};
@@ -294,6 +290,11 @@ function onEdit(e) {
     const col = range.getColumn();
 
     if (row === 1) return;
+    
+    // Проверка гиперссылок платежных систем (если редактируется колонна платежных систем)
+    if (col === 5) {
+        checkPaymentHyperlinks(e);
+    }
 
     const changesSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetById(1531258534);
     if (!changesSheet) {
