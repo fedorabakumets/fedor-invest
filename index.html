@@ -2079,7 +2079,19 @@
                     const btn = document.getElementById('refreshDataBtn');
                     btn.disabled = true;
                     btn.textContent = '⏳ Обновляю...';
+                    
+                    // Сохраняем текущую тему и шрифт перед очисткой
+                    const currentTheme = localStorage.getItem('theme');
+                    const currentFontSize = localStorage.getItem('fontSize');
+                    const currentView = localStorage.getItem('view');
+                    
                     localStorage.clear();
+                    
+                    // Восстанавливаем пользовательские настройки
+                    if (currentTheme) localStorage.setItem('theme', currentTheme);
+                    if (currentFontSize) localStorage.setItem('fontSize', currentFontSize);
+                    if (currentView) localStorage.setItem('view', currentView);
+                    
                     setTimeout(() => location.reload(), 500);
                 });
 
