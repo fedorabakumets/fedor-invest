@@ -974,6 +974,11 @@
             line-height: 1.4;
         }
 
+        a.payment-link::after {
+            content: '';
+            display: none !important;
+        }
+
         .cards-view table tbody td:first-child a {
             font-weight: 600;
             font-size: 1.05em;
@@ -1439,6 +1444,7 @@
                     link.textContent = escapeHTML(payment);
                     link.style.color = '#0066cc';
                     link.style.textDecoration = 'underline';
+                    link.className = 'payment-link';
                     wrapper.appendChild(link);
                 } else {
                     const text = document.createElement('span');
