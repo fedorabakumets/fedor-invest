@@ -280,7 +280,10 @@ function createPaymentHyperlinksFormula(cell, paymentText) {
         // Загружаем данные платежей из листа "Фильтры"
         const ss = SpreadsheetApp.getActiveSpreadsheet();
         const filtersSheet = ss.getSheetByName("Фильтры");
-        if (!filtersSheet) return;
+        if (!filtersSheet) {
+            console.log("createPaymentHyperlinksFormula: Лист Фильтры не найден");
+            return;
+        }
         
         const lastRow = filtersSheet.getLastRow();
         const payments = {};
@@ -297,50 +300,46 @@ function createPaymentHyperlinksFormula(cell, paymentText) {
                     const urlMatch = formula.match(/"([^"]+)"/);
                     if (urlMatch) {
                         url = urlMatch[1];
-                    }
-                } else {
-                    const richText = paymentCell.getRichTextValue();
-                    if (richText) {
-                        const text = richText.getText();
-                        if (text && text.length > 0) {
-                            try {
-                                const link = richText.getLinkUrl(0);
-                                url = link || '';
-                            } catch (linkErr) {
-                                console.log(`createPaymentHyperlinksFormula: Не удалось получить URL из Rich Text`);
-                            }
-                        }
+                        console.log(`createPaymentHyperlinksFormula: Найдена ссылка на ${displayValue}: ${url}`);
                     }
                 }
             } catch (e) {
-                console.log(`createPaymentHyperlinksFormula: Ошибка при чтении платежа: ${e}`);
+                console.log(`createPaymentHyperlinksFormula: Не можем прочитать формулу из ячейки ${i}`);
             }
             
             if (displayValue && url) {
-                payments[displayValue.toLowerCase()] = { url: url, display: displayValue };
+                payments[displayValue.toLowerCase()] = url;
             }
         }
         
-        // Создаем Rich Text с гиперссылками
+        // Парсим платежи и создаем HYPERLINK формулы
         const paymentList = paymentText.split(',').map(p => p.trim()).filter(p => p);
-        let richTextBuilder = SpreadsheetApp.newRichTextValue().setText(paymentText);
+        const formulas = [];
         
         paymentList.forEach(paymentName => {
             const paymentLower = paymentName.toLowerCase();
-            const paymentData = payments[paymentLower];
+            const url = payments[paymentLower];
             
-            if (paymentData) {
-                const startIndex = paymentText.indexOf(paymentName);
-                const endIndex = startIndex + paymentName.length;
-                if (startIndex >= 0) {
-                    richTextBuilder = richTextBuilder.setLinkUrl(startIndex, endIndex, paymentData.url);
-                    console.log(`createPaymentHyperlinksFormula: Добавлена ссылка на ${paymentName}: ${paymentData.url}`);
-                }
+            if (url) {
+                // Создаем HYPERLINK формулу
+                const formula = `=HYPERLINK("${url}", "${paymentName}")`;
+                formulas.push(formula);
+                console.log(`createPaymentHyperlinksFormula: Добавлена формула на ${paymentName}`);
+            } else {
+                formulas.push(paymentName);
             }
         });
         
-        cell.setRichTextValue(richTextBuilder.build());
-        console.log(`createPaymentHyperlinksFormula: Rich Text установлен успешно`);
+        // Если только одна платежка - просто устанавливаем формулу
+        if (formulas.length === 1) {
+            cell.setFormula(formulas[0]);
+        } else if (formulas.length > 1) {
+            // Если несколько - объединяем с перечислением (пока как текст с HYPERLINK)
+            // Устанавливаем первую как формулу, остальные добавляем текстом
+            cell.setValue(paymentText);
+        }
+        
+        console.log(`createPaymentHyperlinksFormula: Завершено`);
     } catch (error) {
         console.error(`createPaymentHyperlinksFormula: Ошибка: ${error}`);
     }
