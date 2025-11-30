@@ -17,6 +17,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/api/changes':
             self.send_api_changes()
+        elif self.path == '/api/config':
+            self.send_config()
         else:
             super().do_GET()
     
@@ -49,6 +51,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
             self.wfile.write(json.dumps([]).encode('utf-8'))
+    
+    def send_config(self):
+        try:
+            google_api_key = os.environ.get('GOOGLE_SHEETS_API_KEY', '')
+            config = {'apiKey': google_api_key}
+            
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(config).encode('utf-8'))
+        except Exception as e:
+            print(f'Config Error: {e}')
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'apiKey': ''}).encode('utf-8'))
     
     def end_headers(self):
         self.send_header('Cache-Control', 'no-cache')
