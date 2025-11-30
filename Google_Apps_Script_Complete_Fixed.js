@@ -1,3 +1,79 @@
+// Функция для проверки гиперссылок в платежных системах
+function checkPaymentHyperlinks(e) {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetById(1897875028);
+    if (!sheet) return;
+    
+    const range = e.range;
+    const col = range.getColumn();
+    const row = range.getRow();
+    
+    // Колонна 5 - Платежные системы
+    if (col !== 5 || row === 1) return;
+    
+    const cell = range.getSheet().getRange(row, col);
+    const payments = cell.getValue().toString().split(',').map(p => p.trim()).filter(p => p);
+    
+    const filtersSheet = ss.getSheetByName("Фильтры");
+    if (!filtersSheet) return;
+    
+    const paymentList = [];
+    const lastRow = Math.max(filtersSheet.getLastRow(), 1);
+    
+    for (let i = 2; i <= lastRow; i++) {
+        const paymentCell = filtersSheet.getRange(i, 1);
+        const displayValue = paymentCell.getDisplayValue().toLowerCase();
+        let hasHyperlink = false;
+        
+        try {
+            const formula = paymentCell.getFormula();
+            if (formula && formula.includes('HYPERLINK')) {
+                hasHyperlink = true;
+            }
+        } catch (e) {
+            // Игнорируем ошибки
+        }
+        
+        paymentList.push({
+            name: displayValue,
+            hasUrl: hasHyperlink
+        });
+    }
+    
+    // Проверка каждой платежной системы
+    const missingPayments = [];
+    const paymentsWithoutUrls = [];
+    
+    payments.forEach(payment => {
+        const lower = payment.toLowerCase();
+        const found = paymentList.find(p => p.name === lower);
+        
+        if (!found) {
+            missingPayments.push(payment);
+        } else if (!found.hasUrl) {
+            paymentsWithoutUrls.push(payment);
+        }
+    });
+    
+    // Показываем предупреждение если есть проблемы
+    if (missingPayments.length > 0 || paymentsWithoutUrls.length > 0) {
+        let message = 'Внимание при редактировании платежных систем:\n';
+        if (missingPayments.length > 0) {
+            message += `\n❌ Не найдены в списке фильтров: ${missingPayments.join(', ')}`;
+        }
+        if (paymentsWithoutUrls.length > 0) {
+            message += `\n⚠️  Без гиперссылок: ${paymentsWithoutUrls.join(', ')}`;
+        }
+        
+        SpreadsheetApp.getUi().alert(message);
+    }
+}
+
+function onEdit(e) {
+    // Проверка гиперссылок платежных систем
+    checkPaymentHyperlinks(e);
+}
+
 function doGet(e) {
     const params = e && e.parameter ? e.parameter : {};
     const action = params.action || 'getAllData';
