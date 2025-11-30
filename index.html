@@ -1912,9 +1912,38 @@
                 document.documentElement.style.fontSize = `${appState.fontSize}rem`;
 
                 setInterval(() => fetchWithRetry(TABLE_CSV_URL).then(csv => {
+                    const savedSort = { ...appState.sort };
                     appState.originalTableData = parseCSV(csv);
                     appState.tableData = [...appState.originalTableData];
                     applyFilters();
+                    
+                    // Восстанавливаем сортировку если она была активна
+                    if (savedSort.column !== -1) {
+                        appState.sort = savedSort;
+                        appState.tableData.sort((a, b) => {
+                            let aValue = a[COLUMN_KEYS[savedSort.column]] || '';
+                            let bValue = b[COLUMN_KEYS[savedSort.column]] || '';
+                            
+                            if (savedSort.column === 2) {
+                                const aNum = parseFloat(aValue.replace(/[^\d.-]/g, '')) || 0;
+                                const bNum = parseFloat(bValue.replace(/[^\d.-]/g, '')) || 0;
+                                return savedSort.direction * (aNum - bNum);
+                            }
+                            
+                            if (savedSort.column === 1) {
+                                const aTime = Date.parse(aValue) || 0;
+                                const bTime = Date.parse(bValue) || 0;
+                                return savedSort.direction * (aTime - bTime);
+                            }
+                            
+                            if (savedSort.column === 3) {
+                                return savedSort.direction * ((DIFFICULTY_ORDER[aValue] || 0) - (DIFFICULTY_ORDER[bValue] || 0));
+                            }
+                            
+                            return savedSort.direction * aValue.localeCompare(bValue, 'ru');
+                        });
+                        renderTable();
+                    }
                 }), 30000);
 
                 document.getElementById('resetFilters').addEventListener('click', () => {

@@ -37,6 +37,10 @@ publicDir = "."
 localPort = 5000
 externalPort = 80
 
+[[ports]]
+localPort = 37507
+externalPort = 3000
+
 [userenv]
 
 [userenv.shared]
