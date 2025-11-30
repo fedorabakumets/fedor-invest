@@ -1251,6 +1251,7 @@
                     link.textContent = escapeHTML(displayText);
                     link.setAttribute('aria-label', `Visit ${displayText}`);
                     link.dataset.tooltip = url;
+                    link.style.fontWeight = 'bold';
                     container.appendChild(link);
                     
                     return container;
