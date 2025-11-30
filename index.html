@@ -1106,6 +1106,7 @@
         const DIFFICULTY_ORDER = { Легкая: 1, Средняя: 2, Сложная: 3 };
         const TABLE_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
         const FILTERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
+        const CHANGES_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1531258534';
         const SUPPORTED_LOCALES = ['ru-RU', 'en-US', 'fr-FR'];
         const RETRY_DELAYS = [1000, 2000, 4000];
 
@@ -1883,19 +1884,60 @@
             const [, day, month, year, hour, minute, second] = match;
             return new Date(year, month - 1, day, hour, minute, second);
         }
+
+        function parseChangeCSV(csv) {
+            const rows = csv.trim().split('\n').map(row =>
+                row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.trim().replace(/^"|"$/g, ''))
+            );
+            if (rows.length < 2) return [];
+            return rows.slice(1).map(row => ({
+                'Дата и время': row[0] || '',
+                'Сайт': row[1] || '',
+                'Параметр': row[2] || '',
+                'Было': row[3] || '',
+                'Стало': row[4] || ''
+            })).filter(row => row['Дата и время'] || row['Сайт']);
+        }
         
         async function loadLastChanges() {
             try {
-                const response = await fetch('/api/changes');
-                if (!response.ok) throw new Error('Failed to load changes');
-                const data = await response.json();
-                appState.lastChanges = data.slice(-5).reverse().map(item => ({
-                    'Дата и время': item.datetime,
-                    'Сайт': item.site,
-                    'Параметр': item.param,
-                    'Было': item.old,
-                    'Стало': item.new
-                }));
+                let formattedData = [];
+                let apiError = null;
+
+                // Сначала пытаемся загрузить через CSV
+                try {
+                    const response = await fetch(CHANGES_CSV_URL);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const csv = await response.text();
+                    formattedData = parseChangeCSV(csv);
+                } catch (csvError) {
+                    console.warn('CSV загрузка не удалась, пробуем API:', csvError);
+                    apiError = csvError;
+                }
+
+                // Если CSV не сработал - пробуем API
+                if (formattedData.length === 0) {
+                    try {
+                        const response = await fetch('/api/changes');
+                        if (response.ok) {
+                            const data = await response.json();
+                            formattedData = data.map(item => ({
+                                'Дата и время': item.datetime,
+                                'Сайт': item.site,
+                                'Параметр': item.param,
+                                'Было': item.old,
+                                'Стало': item.new
+                            }));
+                        }
+                    } catch (error) {
+                        console.warn('API загрузка не удалась:', error);
+                        if (apiError) throw apiError;
+                        throw new Error('Не удалось загрузить последние изменения');
+                    }
+                }
+
+                // Берем последние 5 изменений и разворачиваем (новые первыми)
+                appState.lastChanges = formattedData.slice(-5).reverse();
                 
                 // Устанавливаем дату последнего обновления из самого нового изменения
                 if (appState.lastChanges.length > 0) {
