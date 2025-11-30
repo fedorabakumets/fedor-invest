@@ -1105,7 +1105,7 @@
         ];
         const DIFFICULTY_ORDER = { Легкая: 1, Средняя: 2, Сложная: 3 };
         const TABLE_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
-        const FILTERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=2048557735';
+        const FILTERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4/export?format=csv&gid=1897875028';
         const SUPPORTED_LOCALES = ['ru-RU', 'en-US', 'fr-FR'];
         const RETRY_DELAYS = [1000, 2000, 4000];
 
@@ -1128,34 +1128,41 @@
             paymentUrls: {}
         };
 
-        async function loadPaymentUrlsFromCSV() {
+        async function loadPaymentUrlsViaAPI() {
             try {
-                const response = await fetchWithRetry(FILTERS_CSV_URL);
-                const text = await response.text();
-                const lines = text.trim().split('\n');
+                const spreadsheetId = '1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4';
+                const sheetId = 2048557735;
+                const apiKey = await fetch('/api/config').then(r => r.json()).then(d => d.apiKey);
                 
-                if (lines.length < 2) return false;
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?includeGridData=true&ranges=Фильтры!A:E&key=${apiKey}`;
+                const response = await fetch(url);
+                const data = await response.json();
                 
-                for (let i = 1; i < lines.length; i++) {
-                    const parts = lines[i].split(',');
-                    if (parts.length >= 2) {
-                        const paymentName = parts[0].trim().replace(/^"|"$/g, '').toLowerCase();
-                        const url = parts[1].trim().replace(/^"|"$/g, '');
-                        if (paymentName && url) {
-                            appState.paymentUrls[paymentName] = url;
-                            console.log(`Загруженная ссылка из CSV для ${paymentName}: ${url}`);
+                if (data.sheets && data.sheets[0] && data.sheets[0].data) {
+                    const gridData = data.sheets[0].data[0].rowData || [];
+                    gridData.forEach((row, idx) => {
+                        if (idx === 0 || !row.values) return;
+                        const paymentCell = row.values[1];
+                        if (paymentCell && paymentCell.hyperlink) {
+                            const paymentName = (paymentCell.userEnteredValue?.stringValue || '').toLowerCase();
+                            appState.paymentUrls[paymentName] = paymentCell.hyperlink;
+                            console.log(`Загруженная ссылка для ${paymentName}: ${paymentCell.hyperlink}`);
                         }
-                    }
+                    });
                 }
                 return true;
             } catch (e) {
-                console.warn('CSV загрузка URL платежей не удалась:', e);
+                console.warn('API загрузка гиперссылок не удалась:', e);
                 return false;
             }
         }
 
         async function loadPaymentUrls() {
-            await loadPaymentUrlsFromCSV();
+            // Попыткаемся загрузить через API, если не сработает - используем CSV способ
+            const apiSuccess = await loadPaymentUrlsViaAPI();
+            if (!apiSuccess) {
+                console.log('Используется CSV способ без гиперссылок');
+            }
         }
 
         function toggleView() {
