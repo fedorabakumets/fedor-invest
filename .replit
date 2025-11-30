@@ -36,3 +36,10 @@ publicDir = "."
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+GOOGLE_CLIENT_ID = "124246847133-g8gfdgkjfspivd3kgnhfugghci3q1jc2.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "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"
+GOOGLE_PROJECT_ID = "sheetstogithubapi"

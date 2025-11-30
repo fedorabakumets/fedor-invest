@@ -1123,8 +1123,41 @@
             paymentUrls: {}
         };
 
+        async function loadPaymentUrlsViaAPI() {
+            try {
+                const spreadsheetId = '1-_Qzi00wtezoZSnNiAhgvXJFhBE4x7LhyihTHtZgXv4';
+                const sheetId = 2048557735;
+                const apiKey = await fetch('/api/config').then(r => r.json()).then(d => d.apiKey);
+                
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?includeGridData=true&ranges=Фильтры!A:E&key=${apiKey}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.sheets && data.sheets[0] && data.sheets[0].data) {
+                    const gridData = data.sheets[0].data[0].rowData || [];
+                    gridData.forEach((row, idx) => {
+                        if (idx === 0 || !row.values) return;
+                        const paymentCell = row.values[1];
+                        if (paymentCell && paymentCell.hyperlink) {
+                            const paymentName = (paymentCell.userEnteredValue?.stringValue || '').toLowerCase();
+                            appState.paymentUrls[paymentName] = paymentCell.hyperlink;
+                            console.log(`Загруженная ссылка для ${paymentName}: ${paymentCell.hyperlink}`);
+                        }
+                    });
+                }
+                return true;
+            } catch (e) {
+                console.warn('API загрузка гиперссылок не удалась:', e);
+                return false;
+            }
+        }
+
         async function loadPaymentUrls() {
-            // Функция отключена - платежи отображаются как текст
+            // Попыткаемся загрузить через API, если не сработает - используем CSV способ
+            const apiSuccess = await loadPaymentUrlsViaAPI();
+            if (!apiSuccess) {
+                console.log('Используется CSV способ без гиперссылок');
+            }
         }
 
         function toggleView() {
@@ -1371,7 +1404,32 @@
 
         function createPaymentIconsElement(value) {
             if (!value || !value.trim()) return document.createTextNode('Не указано');
-            return document.createTextNode(escapeHTML(value));
+            const container = document.createElement('span');
+            const payments = value.split(',').map(p => p.trim()).filter(p => p);
+            
+            payments.forEach((payment, idx) => {
+                const url = appState.paymentUrls[payment.toLowerCase()];
+                if (url) {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.textContent = escapeHTML(payment);
+                    link.style.color = '#0066cc';
+                    link.style.textDecoration = 'underline';
+                    container.appendChild(link);
+                } else {
+                    const text = document.createElement('span');
+                    text.textContent = escapeHTML(payment);
+                    container.appendChild(text);
+                }
+                
+                if (idx < payments.length - 1) {
+                    container.appendChild(document.createTextNode(', '));
+                }
+            });
+            
+            return container;
         }
 
         function createTableCell(value, label, creator = (val => document.createTextNode(escapeHTML(val || 'Не указано')))) {
