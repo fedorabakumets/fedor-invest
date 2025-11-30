@@ -1136,16 +1136,15 @@
                 
                 if (lines.length < 2) return false;
                 
-                const headers = lines[0].split(',').map(h => h.trim());
-                const paymentCol = headers.indexOf('Название') >= 0 ? headers.indexOf('Название') : 1;
-                const urlCol = headers.indexOf('URL') >= 0 ? headers.indexOf('URL') : 2;
-                
                 for (let i = 1; i < lines.length; i++) {
-                    const row = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
-                    if (row.length > Math.max(paymentCol, urlCol) && row[paymentCol] && row[urlCol]) {
-                        const paymentName = row[paymentCol].toLowerCase();
-                        appState.paymentUrls[paymentName] = row[urlCol];
-                        console.log(`Загруженная ссылка из CSV для ${paymentName}: ${row[urlCol]}`);
+                    const parts = lines[i].split(',');
+                    if (parts.length >= 2) {
+                        const paymentName = parts[0].trim().replace(/^"|"$/g, '').toLowerCase();
+                        const url = parts[1].trim().replace(/^"|"$/g, '');
+                        if (paymentName && url) {
+                            appState.paymentUrls[paymentName] = url;
+                            console.log(`Загруженная ссылка из CSV для ${paymentName}: ${url}`);
+                        }
                     }
                 }
                 return true;
