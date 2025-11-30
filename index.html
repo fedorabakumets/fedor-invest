@@ -1364,7 +1364,11 @@
                     const bTime = Date.parse(bValue) || 0;
                     return appState.sort.direction * (aTime - bTime);
                 }
-                if (columnIndex === 2) return appState.sort.direction * (parseFloat(aValue) || 0 - parseFloat(bValue) || 0);
+                if (columnIndex === 2) {
+                    const aNum = parseFloat(aValue.replace(/[^\d.-]/g, '')) || 0;
+                    const bNum = parseFloat(bValue.replace(/[^\d.-]/g, '')) || 0;
+                    return appState.sort.direction * (aNum - bNum);
+                }
                 if (columnIndex === 4) return appState.sort.direction * ((DIFFICULTY_ORDER[aValue] || 0) - (DIFFICULTY_ORDER[bValue] || 0));
                 return appState.sort.direction * (aValue.split('\n').length - bValue.split('\n').length);
             });
