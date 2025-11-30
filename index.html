@@ -1888,6 +1888,15 @@
                     'Было': item.old,
                     'Стало': item.new
                 }));
+                
+                // Устанавливаем дату последнего обновления из самого нового изменения
+                if (appState.lastChanges.length > 0) {
+                    const newestDate = appState.lastChanges[0]['Дата и время'];
+                    if (newestDate) {
+                        appState.lastUpdated = new Date(newestDate);
+                        updateLastUpdated();
+                    }
+                }
             } catch (error) {
                 console.warn('Could not load last changes:', error);
                 appState.lastChanges = [];
