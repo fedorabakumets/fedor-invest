@@ -1489,7 +1489,36 @@
                         const id = `${type}-${index}`;
                         const label = document.createElement('label');
                         label.setAttribute('for', id);
-                        label.innerHTML = `<input type="checkbox" id="${id}" name="${type}" value="${item}" aria-label="${item}"><span>${escapeHTML(item)}</span>`;
+                        label.style.display = 'flex';
+                        label.style.alignItems = 'center';
+                        label.style.gap = '8px';
+                        
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.id = id;
+                        input.name = type;
+                        input.value = item;
+                        input.setAttribute('aria-label', item);
+                        label.appendChild(input);
+                        
+                        if (type === 'payment') {
+                            const url = appState.paymentUrls[item.toLowerCase()];
+                            if (url) {
+                                const img = document.createElement('img');
+                                img.src = `https://www.google.com/s2/favicons?sz=16&domain=${new URL(url).hostname}`;
+                                img.alt = item;
+                                img.style.width = '16px';
+                                img.style.height = '16px';
+                                img.style.borderRadius = '2px';
+                                img.onerror = function() { this.style.display = 'none'; };
+                                label.appendChild(img);
+                            }
+                        }
+                        
+                        const span = document.createElement('span');
+                        span.textContent = escapeHTML(item);
+                        label.appendChild(span);
+                        
                         container.appendChild(label);
                     });
                 }
