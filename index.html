@@ -822,6 +822,62 @@
             box-shadow: 0 0 15px rgba(0, 102, 204, 0.7);
         }
 
+        /* Card Sort Headers */
+        .card-sort-headers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 16px 0;
+            margin-bottom: 16px;
+            border-radius: 8px;
+        }
+
+        .sort-header-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .sort-header-btn:hover {
+            background: linear-gradient(135deg, #0052a3 0%, #003d7a 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .sort-header-btn .sort-icon {
+            font-size: 0.85em;
+        }
+
+        .sort-header-btn .sort-icon.active i {
+            color: #ffcc00;
+        }
+
+        [data-theme="dark"] .card-sort-headers {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .sort-header-btn {
+            background: linear-gradient(135deg, #00ff99 0%, #00cc7a 100%);
+            color: #000;
+        }
+
+        [data-theme="dark"] .sort-header-btn:hover {
+            background: linear-gradient(135deg, #00cc7a 0%, #009966 100%);
+        }
+
         .cards-view table {
             margin: 0 !important;
             min-width: auto;
@@ -1006,6 +1062,15 @@
             <button class="error-close" aria-label="Закрыть сообщение">✕</button>
         </div>
 
+        <div id="cardSortHeaders" class="card-sort-headers" style="display: none;">
+            <button onclick="sortTable(0)" class="sort-header-btn">Название сайта <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
+            <button onclick="sortTable(1)" class="sort-header-btn">Дата создания <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
+            <button onclick="sortTable(2)" class="sort-header-btn">Минимальная сумма <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
+            <button onclick="sortTable(3)" class="sort-header-btn">Сложность <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
+            <button onclick="sortTable(4)" class="sort-header-btn">Платежи <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
+            <button onclick="sortTable(5)" class="sort-header-btn">Тип работы <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
+        </div>
+
         <section class="table-section">
             <table id="sitesTable" aria-label="Таблица сравнения сайтов">
                 <thead>
@@ -1064,7 +1129,9 @@
 
         function toggleView() {
             appState.view = appState.view === 'table' ? 'cards' : 'table';
+            const cardSortHeaders = document.getElementById('cardSortHeaders');
             const tableSection = document.querySelector('.table-section');
+            if (cardSortHeaders) cardSortHeaders.style.display = appState.view === 'cards' ? 'flex' : 'none';
             if (tableSection) {
                 tableSection.style.opacity = '0';
                 setTimeout(() => {
