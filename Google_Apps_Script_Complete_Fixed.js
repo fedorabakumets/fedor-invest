@@ -223,20 +223,35 @@ function getPaymentData() {
     const result = [];
     
     for (let i = 2; i <= lastRow; i++) {
-        const cell = sheet.getRange(i, 1);
-        const displayValue = escapeValue(cell.getDisplayValue());
+        const paymentCell = sheet.getRange(i, 1);
+        const displayValue = escapeValue(paymentCell.getDisplayValue());
+        
         let url = '';
         
+        // Пробуем получить URL из колонны 2
         try {
-            const formula = cell.getFormula();
-            if (formula && formula.includes('HYPERLINK')) {
-                const urlMatch = formula.match(/"([^"]+)"/);
-                if (urlMatch) {
-                    url = urlMatch[1];
-                }
+            const urlCell = sheet.getRange(i, 2);
+            const urlValue = escapeValue(urlCell.getDisplayValue());
+            if (urlValue && (urlValue.startsWith('http://') || urlValue.startsWith('https://'))) {
+                url = urlValue;
             }
         } catch (e) {
             // Игнорируем ошибки при чтении
+        }
+        
+        // Если URL не найден в колонне 2, пробуем HYPERLINK в колонне 1
+        if (!url) {
+            try {
+                const formula = paymentCell.getFormula();
+                if (formula && formula.includes('HYPERLINK')) {
+                    const urlMatch = formula.match(/"([^"]+)"/);
+                    if (urlMatch) {
+                        url = urlMatch[1];
+                    }
+                }
+            } catch (e) {
+                // Игнорируем ошибки при чтении
+            }
         }
         
         if (displayValue && url) {
@@ -245,6 +260,8 @@ function getPaymentData() {
                 url: url
             });
             console.log(`getPaymentData: Строка ${i}: ${displayValue} -> ${url}`);
+        } else if (displayValue) {
+            console.log(`getPaymentData: Строка ${i}: ${displayValue} (без URL)`);
         }
     }
 
