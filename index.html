@@ -1354,24 +1354,26 @@
             appState.tableData.sort((a, b) => {
                 let aValue = a[COLUMN_KEYS[columnIndex]] || '';
                 let bValue = b[COLUMN_KEYS[columnIndex]] || '';
-                if (columnIndex === 7) {
-                    aValue = aValue.split('\n')[0];
-                    bValue = bValue.split('\n')[0];
-                }
-                if ([0, 3, 7].includes(columnIndex)) return appState.sort.direction * aValue.localeCompare(bValue);
-                if (columnIndex === 1) {
-                    const aTime = Date.parse(aValue) || 0;
-                    const bTime = Date.parse(bValue) || 0;
-                    return appState.sort.direction * (aTime - bTime);
-                }
+                
                 if (columnIndex === 2) {
                     const aNum = parseFloat(aValue.replace(/[^\d.-]/g, '')) || 0;
                     const bNum = parseFloat(bValue.replace(/[^\d.-]/g, '')) || 0;
                     return appState.sort.direction * (aNum - bNum);
                 }
-                if (columnIndex === 4) return appState.sort.direction * ((DIFFICULTY_ORDER[aValue] || 0) - (DIFFICULTY_ORDER[bValue] || 0));
-                return appState.sort.direction * (aValue.split('\n').length - bValue.split('\n').length);
+                
+                if (columnIndex === 1) {
+                    const aTime = Date.parse(aValue) || 0;
+                    const bTime = Date.parse(bValue) || 0;
+                    return appState.sort.direction * (aTime - bTime);
+                }
+                
+                if (columnIndex === 3) {
+                    return appState.sort.direction * ((DIFFICULTY_ORDER[aValue] || 0) - (DIFFICULTY_ORDER[bValue] || 0));
+                }
+                
+                return appState.sort.direction * aValue.localeCompare(bValue, 'ru');
             });
+            appState.page = 1;
             updateArrow(columnIndex);
             renderTable();
         }
