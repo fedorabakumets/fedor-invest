@@ -38,6 +38,7 @@
 ├── .env.example            # Шаблон для Google Sheets API ключа
 ├── Code.gs                 # Google Apps Script (триггер)
 ├── appsscript.json         # Конфигурация скрипта
+├── demo.gif                # Демонстрация приложения (GIF)
 └── README.md               # Этот файл
 ```
 
