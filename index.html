@@ -1071,7 +1071,7 @@
             <button onclick="sortTable(0)" class="sort-header-btn">Название сайта <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
             <button onclick="sortTable(1)" class="sort-header-btn">Дата создания <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
             <button onclick="sortTable(2)" class="sort-header-btn">Минимальная сумма вывода <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
-            <button onclick="sortTable(3)" class="sort-header-btn">Сложность регистрации <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
+            <button onclick="sortTable(3)" class="sort-header-btn">Сложность для регистрации и вывода средств <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
             <button onclick="sortTable(4)" class="sort-header-btn">Платежные системы <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
             <button onclick="sortTable(5)" class="sort-header-btn">Тип работы <span class="sort-icon"><i class="fas fa-sort"></i></span></button>
         </div>
@@ -1083,7 +1083,7 @@
                         <th onclick="sortTable(0)">Название сайта <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
                         <th onclick="sortTable(1)">Дата создания <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
                         <th onclick="sortTable(2)">Минимальная сумма вывода <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
-                        <th onclick="sortTable(3)">Сложность регистрации <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
+                        <th onclick="sortTable(3)">Сложность для регистрации и вывода средств <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
                         <th onclick="sortTable(4)">Платежные системы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
                         <th onclick="sortTable(5)">Тип работы <span class="sort-icon"><i class="fas fa-sort"></i></span></th>
                     </tr>
@@ -1100,7 +1100,7 @@
         const DEFAULT_PROTOCOL = 'https://';
         const COLUMN_KEYS = [
             'Название сайта', 'Дата создания', 'Минимальная сумма вывода',
-            'Сложность регистрации', 'Платежные системы',
+            'Сложность для регистрации и вывода средств', 'Платежные системы',
             'Тип работы'
         ];
         const DIFFICULTY_ORDER = { Легкая: 1, Средняя: 2, Сложная: 3 };
@@ -1695,7 +1695,7 @@
         function getParamContext(param) {
             const paramLower = (param || '').toLowerCase();
             if (paramLower.includes('сложность')) {
-                return { text: `сложность регистрации`, gender: 'female' };
+                return { text: `сложность для регистрации и вывода средств`, gender: 'female' };
             } else if (paramLower.includes('минимальная') || paramLower.includes('вывод')) {
                 return { text: `минимальная сумма вывода`, gender: 'female' };
             } else if (paramLower.includes('реферал')) {
