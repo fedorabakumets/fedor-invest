@@ -157,27 +157,14 @@ function getPaymentData() {
         
         try {
             const formula = cell.getFormula();
-            if (formula.includes('HYPERLINK')) {
+            if (formula && formula.includes('HYPERLINK')) {
                 const urlMatch = formula.match(/"([^"]+)"/);
                 if (urlMatch) {
                     url = urlMatch[1];
                 }
-            } else {
-                const richText = cell.getRichTextValue();
-                if (richText) {
-                    const text = richText.getText();
-                    if (text && text.length > 0) {
-                        try {
-                            const linkUrl = richText.getLinkUrl(0);
-                            url = linkUrl || '';
-                        } catch (linkErr) {
-                            console.log(`getPaymentData: Не удалось получить URL из Rich Text`);
-                        }
-                    }
-                }
             }
         } catch (e) {
-            console.log(`getPaymentData: Ошибка при чтении гиперссылки из строки ${i}: ${e}`);
+            // Игнорируем ошибки при чтении
         }
         
         if (displayValue && url) {
@@ -296,7 +283,7 @@ function createPaymentHyperlinksFormula(cell, paymentText) {
             
             try {
                 const formula = paymentCell.getFormula();
-                if (formula.includes('HYPERLINK')) {
+                if (formula && formula.includes('HYPERLINK')) {
                     const urlMatch = formula.match(/"([^"]+)"/);
                     if (urlMatch) {
                         url = urlMatch[1];
@@ -304,7 +291,7 @@ function createPaymentHyperlinksFormula(cell, paymentText) {
                     }
                 }
             } catch (e) {
-                console.log(`createPaymentHyperlinksFormula: Не можем прочитать формулу из ячейки ${i}`);
+                // Игнорируем ошибки
             }
             
             if (displayValue && url) {
