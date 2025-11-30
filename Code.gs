@@ -2,10 +2,14 @@
 // Используется для заполнения листа "Изменения" при редактировании основной таблицы
 
 function onEdit(e) {
+    if (!e || !e.source) return;
+    
     const sheet = e.source.getActiveSheet();
-    if (sheet.getSheetId() !== 1897875028) return;
+    if (!sheet || sheet.getSheetId() !== 1897875028) return;
 
     const range = e.range;
+    if (!range) return;
+    
     const row = range.getRow();
     const col = range.getColumn();
 
