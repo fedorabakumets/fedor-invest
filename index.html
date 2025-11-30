@@ -1876,6 +1876,14 @@
             });
         }
 
+        function parseDateTime(dateStr) {
+            // Парсим формат DD.MM.YYYY H:MM:SS или DD.MM.YYYY HH:MM:SS
+            const match = dateStr.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})\s+(\d{1,2}):(\d{2}):(\d{2})/);
+            if (!match) return null;
+            const [, day, month, year, hour, minute, second] = match;
+            return new Date(year, month - 1, day, hour, minute, second);
+        }
+        
         async function loadLastChanges() {
             try {
                 const response = await fetch('/api/changes');
@@ -1893,7 +1901,7 @@
                 if (appState.lastChanges.length > 0) {
                     const newestDate = appState.lastChanges[0]['Дата и время'];
                     if (newestDate) {
-                        appState.lastUpdated = new Date(newestDate);
+                        appState.lastUpdated = parseDateTime(newestDate);
                         updateLastUpdated();
                     }
                 }
