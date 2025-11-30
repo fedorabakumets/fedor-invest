@@ -38,3 +38,21 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.json
+!appsscript.json
+!package.json
+
+# Replit specific
+attached_assets/
+.replit
+
+# Temporary & Backup files
+*~
+*.bak
+*.tmp
+server2.py
