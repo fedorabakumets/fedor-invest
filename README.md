@@ -189,10 +189,12 @@ python3 server.py
 5. Нажмите **"Add Secret"**
 
 #### Для локальной разработки:
-1. Создайте файл `.env` в корневой папке проекта:
+1. В проекте есть файл `.env.example`. Скопируйте его в `.env` и внесите свой API ключ:
 ```bash
-GOOGLE_SHEETS_API_KEY=your_api_key_here
+cp .env.example .env
+# Затем отредактируйте .env и вставьте ваш API ключ вместо "your_api_key_here"
 ```
+
 2. Или установите переменную окружения в терминале перед запуском:
 ```bash
 export GOOGLE_SHEETS_API_KEY=your_api_key_here
