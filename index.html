@@ -941,37 +941,6 @@
             color: #00ff99;
         }
 
-        .payment-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .payment-link-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .payment-favicon {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .payment-link-item a {
-            text-decoration: none;
-            color: #0066cc;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        .payment-link-item a:hover {
-            color: #0052a3;
-            text-decoration: underline;
-        }
 
         @media (max-width: 768px) {
             .card-column {
@@ -1090,20 +1059,7 @@
         };
 
         async function loadPaymentUrls() {
-            try {
-                const gasUrl = 'https://script.google.com/macros/s/AKfycbyVbpowhc57mSCOHJE3U6HoM62sz4SX_Ph7a0urydK8ROXOxQ5FimwqNvPIguGTdYRT/exec?action=getPayments';
-                const response = await fetch(gasUrl);
-                const data = await response.json();
-                
-                if (data.success && Array.isArray(data.payments)) {
-                    data.payments.forEach(item => {
-                        appState.paymentUrls[item.payment] = item.url;
-                    });
-                    console.log('Payment URLs loaded from API:', appState.paymentUrls);
-                }
-            } catch (e) {
-                console.error('Could not load payment URLs:', e);
-            }
+            // Функция отключена - платежи отображаются как текст
         }
 
         function toggleView() {
@@ -1348,47 +1304,7 @@
 
         function createPaymentIconsElement(value) {
             if (!value || !value.trim()) return document.createTextNode('Не указано');
-            const container = document.createElement('div');
-            container.className = 'payment-links';
-            const payments = value.split(',').map(p => p.trim()).filter(p => p);
-            payments.forEach(payment => {
-                const url = appState.paymentUrls[payment.toLowerCase()] || '#';
-                
-                try {
-                    const paymentContainer = document.createElement('div');
-                    paymentContainer.className = 'payment-link-item';
-                    
-                    // Создаём иконку через Google Favicons API
-                    const paymentDomain = url !== '#' ? new URL(url).hostname : payment;
-                    const img = document.createElement('img');
-                    img.src = `https://www.google.com/s2/favicons?sz=32&domain=${paymentDomain}`;
-                    img.alt = payment;
-                    img.className = 'payment-favicon';
-                    img.onerror = function() { this.style.display = 'none'; };
-                    paymentContainer.appendChild(img);
-                    
-                    // Создаём ссылку с названием платежной системы
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.target = '_blank';
-                    link.rel = 'noopener noreferrer';
-                    link.textContent = escapeHTML(payment);
-                    link.style.textDecoration = 'none';
-                    link.style.color = 'inherit';
-                    link.title = url !== '#' ? url : payment;
-                    paymentContainer.appendChild(link);
-                    
-                    container.appendChild(paymentContainer);
-                } catch (e) {
-                    // Fallback если URL некорректный
-                    const link = document.createElement('a');
-                    link.href = '#';
-                    link.textContent = escapeHTML(payment);
-                    link.style.cursor = 'text';
-                    container.appendChild(link);
-                }
-            });
-            return container;
+            return document.createTextNode(escapeHTML(value));
         }
 
         function createTableCell(value, label, creator = (val => document.createTextNode(escapeHTML(val || 'Не указано')))) {
